@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach } from "@jest/globals";
 import { User } from "../user";
+import { DomainError } from "@domain/error";
 
 describe("User class tests", () => {
   let user: User;
@@ -20,9 +21,18 @@ describe("User class tests", () => {
   });
 
   it("should throw error for invalid username", () => {
-    expect(() => {
+    let err = undefined;
+    try {
       user.username = "ab"; // Invalid username
-    }).toThrow("Username must be between 3 and 20 characters.");
+    } catch (e) {
+      err = e;
+    }
+    expect(err).toEqual(
+      new DomainError(
+        { username: "Username must be between 3 and 20 characters." },
+        422,
+      ),
+    );
   });
 
   it("should set valid email", () => {
@@ -31,9 +41,15 @@ describe("User class tests", () => {
   });
 
   it("should throw error for invalid email", () => {
-    expect(() => {
+    let err = undefined;
+    try {
       user.email = "invalid-email"; // Invalid email
-    }).toThrow("Invalid email format.");
+    } catch (e) {
+      err = e;
+    }
+    expect(err).toEqual(
+      new DomainError({ email: "Invalid email format." }, 422),
+    );
   });
 
   it("should set valid password", () => {
@@ -42,9 +58,18 @@ describe("User class tests", () => {
   });
 
   it("should throw error for invalid password", () => {
-    expect(() => {
+    let err = undefined;
+    try {
       user.password = "abc"; // Invalid password
-    }).toThrow("Password must be at least 5 characters.");
+    } catch (e) {
+      err = e;
+    }
+    expect(err).toEqual(
+      new DomainError(
+        { password: "Password must be at least 5 characters." },
+        422,
+      ),
+    );
   });
 
   it("should match correct password", () => {

@@ -4,4 +4,4 @@ import { AbstractCrudRepositoryInMemory } from "./shared/AbstractCrudRepositoryI
 
 export class UserRepositoryInMemory
   extends AbstractCrudRepositoryInMemory<User>
-  implements IUserRepository { }
+  implements IUserRepository {}

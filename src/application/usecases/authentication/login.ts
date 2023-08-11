@@ -3,12 +3,8 @@ import { IHashRepository } from "@domain/repositories/IHashRespository";
 import { IUserRepository } from "@domain/repositories/IUsersRepostiry";
 import { IJwtRepository } from "@domain/repositories/IJwtRepository";
 import { JwtService } from "@domain/services/jwtService";
-
-export type LoginForm = {
-  username?: string;
-  email?: string;
-  password: string;
-};
+import { DomainError } from "@domain/error";
+import { LoginFormDto } from "@application/dtos/login";
 
 export type TokenPair = {
   access: string;
@@ -20,18 +16,20 @@ export class LoginUsecase {
     private userRepository: IUserRepository,
     private hashRepository: IHashRepository,
     private jwtRepository: IJwtRepository,
-  ) { }
+  ) {}
 
-  async execute(form: LoginForm): Promise<TokenPair> {
-    if (!form.email) throw "error email not sent";
+  async execute(form: LoginFormDto): Promise<TokenPair> {
     const u = await UserService.filter_one(
       { user: this.userRepository },
       { where: [{ email: form.email }], select: [] },
     );
 
-    const hashedIncomingPassword = this.hashRepository.hash(form.password);
+    const hashedIncomingPassword = await this.hashRepository.hash(
+      form.password,
+    );
+
     if (!u.matchPassword(hashedIncomingPassword))
-      throw "password doesn't match";
+      throw new DomainError({ password: "password doesn't match" }, 401);
 
     return JwtService.login({ jwt: this.jwtRepository }, u);
   }

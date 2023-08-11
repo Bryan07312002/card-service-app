@@ -1,7 +1,8 @@
 import { Uuid } from "@domain/types";
 import IBaseModel from "./shared/IBaseModel";
+import { DomainError } from "@domain/error";
 
-export class Workspace extends IBaseModel {
+export class Workspace extends IBaseModel<Workspace> {
   private _id: Uuid;
   private _name: string;
   private _userId: string;
@@ -15,7 +16,7 @@ export class Workspace extends IBaseModel {
     this._description = description;
   }
 
-  serializeFields(): (keyof this)[] {
+  serializeFields(): (keyof Workspace)[] {
     return ["id", "name", "userId", "description"];
   }
 

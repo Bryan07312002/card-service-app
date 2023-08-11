@@ -19,7 +19,7 @@ export class UserService {
       dependencies.uuid.createV4(),
       userDto.username,
       userDto.email,
-      dependencies.hash.hash(userDto.password),
+      await dependencies.hash.hash(userDto.password),
     );
     return await dependencies.user.insert(user);
   }

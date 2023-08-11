@@ -5,28 +5,48 @@ import {
   Args,
   Filter,
   Paginate,
+  IDeleteOne,
+  IUpdateOne,
 } from "@domain/repositories/shared/ICRUD";
 import IBaseModel from "@domain/models/shared/IBaseModel";
 
-export class AbstractCrudRepositoryInMemory<E extends IBaseModel>
-  implements IInsert<E>, IPaginate<E>, IFilterOne<E>
+export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
+  implements
+    IInsert<E>,
+    IPaginate<E>,
+    IFilterOne<E>,
+    IDeleteOne<E>,
+    IUpdateOne<E>
 {
-  data: E[] = [];
+  constructor(public data: E[]) {}
+
+  Update(filter: Filter<E>, newData: Partial<E>): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  delete(filter: Filter<E>): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  customFilter(obj: E, criteria: Partial<E>): boolean {
+    for (const key in criteria) {
+      if (obj[key as keyof E] === criteria[key]) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   async filter_one(filter: Filter<E>): Promise<E> {
-    let result = this.data.filter((e) => {
-      if (e != filter) {
-        return false;
-      }
+    const result = this.data.find((obj) =>
+      filter.where.every((criteria) => this.customFilter(obj, criteria)),
+    );
 
-      return true;
-    });
-
-    if (result.length > 0) return result[0];
+    if (result) return result;
     else throw "error entity not found";
   }
 
-  filterFieldsFromArray<T extends IBaseModel>(
+  filterFieldsFromArray<T extends IBaseModel<T>>(
     dataArray: T[],
     fieldsArray: string[],
   ): T[] {

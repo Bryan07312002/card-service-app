@@ -1,3 +1,4 @@
 export interface IHashRepository {
-  hash(incomingString: string): string;
+  salt: string;
+  hash(incomingString: string): Promise<string>;
 }

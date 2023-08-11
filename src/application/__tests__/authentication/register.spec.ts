@@ -1,8 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import {
-  RegisterUserUsecase,
-  RegisterForm,
-} from "@application/usecases/authentication/register"; // Import your RegisterUserUseCase and RegisterForm
+import { RegisterUserUsecase } from "@application/usecases/authentication/register"; // Import your RegisterUserUseCase and RegisterForm
+import { RegisterFormDto } from "@application/dtos/registerForm";
 import { IUserRepository } from "@domain/repositories/IUsersRepostiry";
 import { IHashRepository } from "@domain/repositories/IHashRespository";
 import { IUuidRepository } from "@domain/repositories/IUuidRepository";
@@ -68,7 +66,7 @@ describe("RegisterUserUseCase tests", () => {
     UserService.create = jest.fn(async () => user);
 
     // Define the registration form
-    const registrationForm: RegisterForm = {
+    const registrationForm: RegisterFormDto = {
       username: "johndoe",
       email: "john@example.com",
       password: "secure123",

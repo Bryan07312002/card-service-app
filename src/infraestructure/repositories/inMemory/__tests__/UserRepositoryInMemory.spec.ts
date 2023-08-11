@@ -3,11 +3,11 @@ import { UserRepositoryInMemory } from "../UserRepositoryInMemory";
 import { User } from "../../../../domain/models/user";
 
 function createRepository(): UserRepositoryInMemory {
-  return new UserRepositoryInMemory();
+  return new UserRepositoryInMemory([]);
 }
 
 function createTestUser(): User {
-  return new User("a-a-a-a-a-a", "testerson", "email@test", "akdjaas");
+  return new User("a-a-a-a-a-a", "testerson", "email@test.com", "akdjaas");
 }
 
 function hasOnlyeFields<T>(obj: T, expectedFields: (keyof T)[]): boolean {

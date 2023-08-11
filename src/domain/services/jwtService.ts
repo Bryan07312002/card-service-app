@@ -20,12 +20,12 @@ export class JwtService {
   static checkAccess(
     dependencies: { jwt: IJwtRepository },
     token: string,
-  ): boolean {
+  ): object {
     const claim = dependencies.jwt.verify(token);
-    if (claim?.refresh) throw "this is not a access token";
+    if ((claim as any)?.refresh) throw "this is not a access token";
 
     // TODO: check exp
-    return true;
+    return claim;
   }
 
   static checkRefresh(
@@ -33,7 +33,7 @@ export class JwtService {
     token: string,
   ): boolean {
     const claim = dependencies.jwt.verify(token);
-    if (claim.refresh != undefined && claim.refresh) {
+    if ((claim as any).refresh != undefined && (claim as any).refresh) {
       // TODO: check exp
       return true;
     }

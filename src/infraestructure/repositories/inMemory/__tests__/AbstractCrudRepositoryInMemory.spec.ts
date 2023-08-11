@@ -1,15 +1,18 @@
 import { describe, expect, it } from "@jest/globals";
 import { AbstractCrudRepositoryInMemory } from "../shared/AbstractCrudRepositoryInMemory";
+import IBaseModel from "@domain/models/shared/IBaseModel";
 
-class FakeMockEntity {
+class FakeMockEntity extends IBaseModel<FakeMockEntity> {
   constructor(
     public id: string,
     public name: string,
-  ) { }
+  ) {
+    super();
+  }
 }
 
 function createAbstractCrudRepo() {
-  return new AbstractCrudRepositoryInMemory<FakeMockEntity>();
+  return new AbstractCrudRepositoryInMemory<FakeMockEntity>([]);
 }
 
 describe("AbstractCrudRepository", () => {

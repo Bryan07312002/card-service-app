@@ -1,9 +1,9 @@
-import { describe, fail, it, expect, jest, beforeEach } from "@jest/globals";
+import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import {
   LoginUsecase,
-  LoginForm,
   TokenPair,
 } from "@application/usecases/authentication/login";
+import { LoginFormDto } from "@application/dtos/login";
 import { IUserRepository } from "@domain/repositories/IUsersRepostiry";
 import { IHashRepository } from "@domain/repositories/IHashRespository";
 import { IJwtRepository } from "@domain/repositories/IJwtRepository";
@@ -11,6 +11,7 @@ import { JwtService } from "@domain/services/jwtService";
 import { User } from "@domain/models/user";
 import { UserService } from "@domain/services/usersService";
 import { Filter, Args, Paginate } from "@domain/repositories/shared/ICRUD";
+import { DomainError } from "@domain/error";
 
 class MockUserRepository implements IUserRepository {
   insert(entity: User): Promise<User> {
@@ -25,12 +26,14 @@ class MockUserRepository implements IUserRepository {
 }
 
 class MockHashRepository implements IHashRepository {
-  hash(incomingString: string): string {
+  salt: string;
+  async hash(_incomingString: string): Promise<string> {
     throw new Error("Method not implemented.");
   }
 }
 
 class MockJwtRepository implements IJwtRepository {
+  secret: string;
   sign(payload: object): string {
     throw new Error("Method not implemented.");
   }
@@ -70,7 +73,7 @@ describe("LoginUsecase tests", () => {
     UserService.filter_one = jest.fn(async () => user);
 
     // Mock HashRepository.hash to return the same hashed password
-    mockHashRepository.hash = jest.fn(() => "hashedPassword");
+    mockHashRepository.hash = jest.fn(async () => "hashedPassword");
 
     // Mock User.matchPassword to return true
     user.matchPassword = jest.fn(() => true);
@@ -83,7 +86,7 @@ describe("LoginUsecase tests", () => {
     JwtService.login = jest.fn(() => tokenPair);
 
     // Define the login form
-    const loginForm: LoginForm = {
+    const loginForm: LoginFormDto = {
       email: "john@example.com",
       password: "password123",
     };
@@ -126,13 +129,13 @@ describe("LoginUsecase tests", () => {
     UserService.filter_one = jest.fn(async () => user);
 
     // Mock HashRepository.hash to return a different hashed password
-    mockHashRepository.hash = jest.fn(() => "differentHashedPassword");
+    mockHashRepository.hash = jest.fn(async () => "differentHashedPassword");
 
     // Mock User.matchPassword to return false
     user.matchPassword = jest.fn(() => false);
 
     // Define the login form
-    const loginForm: LoginForm = {
+    const loginForm: LoginFormDto = {
       email: "john@example.com",
       password: "incorrectPassword",
     };
@@ -141,8 +144,10 @@ describe("LoginUsecase tests", () => {
       // Execute the use case
       await loginUsecase.execute(loginForm);
       throw "login should had failed";
-    } catch (err) {
-      expect(err).toBe("password doesn't match");
+    } catch (e) {
+      expect(e).toEqual(
+        new DomainError({ password: "password doesn't match" }, 401),
+      );
     }
 
     // Assert that UserRepository.filter_one was called with the correct argument
