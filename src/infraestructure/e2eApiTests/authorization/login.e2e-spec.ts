@@ -1,5 +1,5 @@
 import { LoginFormDto } from "@application/dtos/login";
-import { describe, it, expect, beforeEach } from "@jest/globals";
+import { describe, it, beforeEach } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 import * as request from "supertest";
 import { API } from "../shared/constants";

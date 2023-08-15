@@ -71,10 +71,11 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   async paginate(filter: Filter<E>, arg: Args): Promise<Paginate<Partial<E>>> {
     const indexStart = (arg.page - 1) * arg.take;
     const indexEnd = indexStart + arg.take;
-    const data = this.filterFieldsFromArray(
-      this.data.slice(indexStart, indexEnd),
-      filter.select as any,
-    );
+    const data = //this.filterFieldsFromArray(
+      this.data.slice(indexStart, indexEnd).map((el) => el.toJson() as E);
+    //   filter.select as any,
+    // );
+    // console.log(data, this.data);
 
     return {
       data,
