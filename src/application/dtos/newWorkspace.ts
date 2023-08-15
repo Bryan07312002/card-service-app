@@ -2,28 +2,24 @@ import { DomainError } from "@domain/error";
 
 export class NewWorkspace {
   constructor(
-    public title: string,
+    public name: string,
     public description?: string,
   ) {}
 
   static isNewWorkspace(value: unknown): value is NewWorkspace {
-    if (typeof value === "object" && value !== null && "title" in value) {
+    if (typeof value === "object" && value !== null) {
       const workspace = value as NewWorkspace;
 
-      if (
-        typeof workspace.title === "string" &&
-        workspace.title.trim() !== ""
-      ) {
-        // If description is provided, ensure it's a string
-        if (
-          workspace.description !== undefined &&
-          typeof workspace.description !== "string"
-        ) {
-          return false;
-        }
+      if (typeof workspace.name !== "string")
+        throw new DomainError({ name: "must be set as string" }, 422);
 
-        return true;
-      }
+      if (
+        workspace.description !== undefined &&
+        typeof workspace.description !== "string"
+      )
+        throw new DomainError({ description: "must be set as string" }, 422);
+
+      return true;
     }
     throw new DomainError("bad obj", 422);
   }

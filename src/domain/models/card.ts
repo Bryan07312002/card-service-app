@@ -1,7 +1,7 @@
 import { Uuid } from "@domain/types";
 import IBaseModel from "@domain/models/shared/IBaseModel";
 
-export class Card extends IBaseModel {
+export class Card extends IBaseModel<Card> {
   private _id: Uuid;
   private _title: string;
   private _description: string;
@@ -26,7 +26,7 @@ export class Card extends IBaseModel {
     this._updatedAt = updatedAt;
   }
 
-  serializeFields(): (keyof this)[] {
+  serializeFields(): (keyof Card)[] {
     return [
       "id",
       "title",

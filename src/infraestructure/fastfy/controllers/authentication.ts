@@ -22,15 +22,15 @@ async function register(
   const user = new UserRepositoryInMemory(context.DbPool.users);
   const uuid = new UuidRepository();
   try {
-    if (RegisterFormDto.isRegisterForm(body)) {
-      const u = await new RegisterUserUsecase(user, hash, uuid).execute({
-        username: body.username,
-        email: body.email,
-        password: body.password,
-      });
+    if (!RegisterFormDto.isRegisterForm(body)) return;
 
-      return res.send(u.toJson()).code(201);
-    }
+    const u = await new RegisterUserUsecase(user, hash, uuid).execute({
+      username: body.username,
+      email: body.email,
+      password: body.password,
+    });
+
+    return res.code(201).send(u.toJson());
   } catch (e: unknown) {
     if (CatchDomainError.isDomainError(e)) {
       return new CatchDomainError(e).toFasfyReply(res);

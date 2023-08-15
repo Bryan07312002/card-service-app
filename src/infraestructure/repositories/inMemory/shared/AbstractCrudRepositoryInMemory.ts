@@ -9,6 +9,7 @@ import {
   IUpdateOne,
 } from "@domain/repositories/shared/ICRUD";
 import IBaseModel from "@domain/models/shared/IBaseModel";
+import { DomainError } from "@domain/error";
 
 export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   implements
@@ -24,8 +25,14 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
     throw new Error("Method not implemented.");
   }
 
-  delete(filter: Filter<E>): Promise<void> {
-    throw new Error("Method not implemented.");
+  async delete(filter: Filter<E>): Promise<void> {
+    const result = this.data.findIndex((obj) =>
+      filter.where.every((criteria) => this.customFilter(obj, criteria)),
+    );
+    if (result < 0) throw new DomainError("resource not found", 422);
+    else this.data.splice(result, 1);
+
+    return;
   }
 
   customFilter(obj: E, criteria: Partial<E>): boolean {

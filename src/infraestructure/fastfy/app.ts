@@ -1,13 +1,18 @@
 import Fastify from "fastify";
 import { AUTHENTICATION_CONTROLLERS } from "./controllers/authentication";
 import { WORKSPACE_CONTROLLERS } from "./controllers/workspace";
+import { CARD_CONTROLLERS } from "./controllers/card";
 import { Context } from "./types";
 
 async function main() {
   const fastify = Fastify({
     logger: true,
   });
-  const controllers = [...AUTHENTICATION_CONTROLLERS, ...WORKSPACE_CONTROLLERS];
+  const controllers = [
+    ...AUTHENTICATION_CONTROLLERS,
+    ...WORKSPACE_CONTROLLERS,
+    ...CARD_CONTROLLERS,
+  ];
 
   const context: Context = {
     hashSalt: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",

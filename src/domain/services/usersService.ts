@@ -14,13 +14,14 @@ export class UserService {
     },
     userDto: NewUser,
   ): Promise<User> {
-    // TODO: validation
     const user = new User(
       dependencies.uuid.createV4(),
       userDto.username,
       userDto.email,
-      await dependencies.hash.hash(userDto.password),
+      userDto.password,
     );
+    user.password = await dependencies.hash.hash(userDto.password);
+
     return await dependencies.user.insert(user);
   }
 
