@@ -6,7 +6,7 @@ import { CatchDomainError } from "../error/catchDomainError";
 import { UserRepositoryInMemory } from "@infraestructure/repositories/inMemory/UserRepositoryInMemory";
 import { DeleteWorkspaceById } from "@application/usecases/worspace/deleteWorkspace";
 import { isUuid } from "@application/usecases/shared/utilsValidators";
-import { GetFullTableById } from "@application/usecases/worspace/getFullTableById";
+import { GetFullWorkspaceByUuid } from "@application/usecases/worspace/getFullTableById";
 import { TableRepositoryInMemory } from "@infraestructure/repositories/inMemory/TableRepositoryInMemory";
 import { CardRepositoryInMemory } from "@infraestructure/repositories/inMemory/CardRepositoryInMemory";
 import { createWorkspace as createWorkspaceController } from "@infraestructure/controllers/workspace/createWorkspace";
@@ -84,7 +84,7 @@ async function getFullWorkspace(
   const user = new UserRepositoryInMemory(context.DbPool.users);
   const table = new TableRepositoryInMemory(context.DbPool.tables);
   const card = new CardRepositoryInMemory(context.DbPool.cards);
-  const usecase = new GetFullTableById(workspace, table, card, user, jwt);
+  const usecase = new GetFullWorkspaceByUuid(workspace, table, card, user, jwt);
 
   try {
     const id = ((req.params as any).id as string) ?? undefined;

@@ -12,7 +12,6 @@ export class WorkspaceService {
     },
     workspaceDto: NewWorkspace,
   ): Promise<Workspace> {
-    // TODO: validation
     const workspace = new Workspace(
       dependencies.uuid.createV4(),
       workspaceDto.name,
@@ -35,7 +34,7 @@ export class WorkspaceService {
   static async filter_one(
     dependencies: { workspace: IWorkspaceRepository },
     filter: Filter<Workspace>,
-  ): Promise<Workspace> {
+  ): Promise<Workspace | null> {
     return await dependencies.workspace.filter_one(filter);
   }
 

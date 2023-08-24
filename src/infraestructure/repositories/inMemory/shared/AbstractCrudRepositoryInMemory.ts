@@ -11,6 +11,8 @@ import {
 import IBaseModel from "@domain/models/shared/IBaseModel";
 import { DomainError } from "@domain/error";
 
+
+
 export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   implements
   IInsert<E>,
@@ -22,6 +24,25 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   tableName = '';
 
   constructor(public data: any) { }
+
+  private findMatches(filters: Partial<E>[]): any[] {
+    const results: E[] = [];
+
+    for (const item of this.data[this.tableName] as E[]) {
+      for (const filter of filters) {
+        const keys = Object.keys(filter) as (keyof Partial<E>)[];
+        for (const k in keys) {
+          const hasField = item.serializeFields().includes(keys[k])
+          if (hasField && item[keys[k] as keyof E] == filter[keys[k] as keyof E]) {
+            results.push(item)
+            break;
+          };
+        }
+      }
+    }
+
+    return results;
+  }
 
   Update(filter: Filter<E>, newData: Partial<E>): Promise<void> {
     throw new Error("Method not implemented.");
@@ -47,7 +68,7 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   }
 
   async filter_one(filter: Filter<E>): Promise<E | null> {
-    const result = this.data[this.tableName].find((obj: E) =>
+    const result = (this.data[this.tableName] as E[]).find((obj: E) =>
       filter.where.every((criteria) => this.customFilter(obj, criteria)),
     );
 
@@ -73,14 +94,13 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   async paginate(filter: Filter<E>, arg: Args): Promise<Paginate<Partial<E>>> {
     const indexStart = (arg.page - 1) * arg.take;
     const indexEnd = indexStart + arg.take;
-    const data = this.data[this.tableName]
-      .slice(indexStart, indexEnd)
-      .map((el: E) => el.toJson() as E);
+    const data = filter.where.length > 0 ? this.findMatches(filter.where) : this.data[this.tableName];
 
     return {
-      data,
+      data: data.slice(indexStart, indexEnd)
+        .map((el: E) => el.toJson() as E),
       page: arg.page,
-      count: this.data[this.tableName].length,
+      count: data.length,
     };
   }
 

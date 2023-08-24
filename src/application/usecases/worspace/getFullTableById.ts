@@ -19,7 +19,7 @@ export type FullWorkspace = {
   tables: fullTable[],
 }
 
-export class GetFullTableById {
+export class GetFullWorkspaceByUuid {
   userId: Uuid | undefined;
 
   constructor(

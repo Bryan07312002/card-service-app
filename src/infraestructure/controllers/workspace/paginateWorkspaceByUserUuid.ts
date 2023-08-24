@@ -4,6 +4,7 @@ import { UserRepositoryInMemory } from "@infraestructure/repositories/inMemory/U
 import { WorkspaceRepositoryInMemory } from "@infraestructure/repositories/inMemory/WorkspaceRepositoryInMemory";
 import { JsonWebTokenJWTRepository } from "@infraestructure/repositories/jsonWebToken/JsonWebTokenRepository";
 import { isJwtToken } from "@infraestructure/controllers/shared/isJwtToken";
+import { isConvertibleToNumber } from "../shared/isConvertibleToNumber";
 
 export async function paginateWorkspaceByUserUuid(
   take: unknown,
@@ -17,9 +18,10 @@ export async function paginateWorkspaceByUserUuid(
   const usecase = new PaginateWorkspacesByUserUuid(workspace, jwt, user);
 
   await usecase.authenticate(isJwtToken(token) ? token.slice(7) : '')
+
   const paginateWorkspaces = await usecase.execute({
-    take: isNaN(Number(take as number)) ? take as number : 10,
-    page: isNaN(Number(page as number)) ? page as number : 1,
+    take: isConvertibleToNumber(take) ? Number(take) : 10,
+    page: isConvertibleToNumber(page) ? Number(page) : 1,
   });
 
   return paginateWorkspaces
