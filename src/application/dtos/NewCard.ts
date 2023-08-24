@@ -5,8 +5,8 @@ export class NewCardDto {
   constructor(
     public title: string,
     public description: string,
-    public workspaceId: Uuid,
-  ) {}
+    public tableId: Uuid,
+  ) { }
 
   static isNewCardDto(value: unknown): value is NewCardDto {
     if (
@@ -14,7 +14,7 @@ export class NewCardDto {
       value !== null &&
       "title" in value &&
       "description" in value &&
-      "workspaceId" in value
+      "tableId" in value
     ) {
       const newCard = value as NewCardDto;
 
@@ -24,7 +24,7 @@ export class NewCardDto {
         newCard.title.trim() !== "" &&
         typeof newCard.description === "string" &&
         newCard.description.trim() !== "" &&
-        typeof newCard.workspaceId === "string"
+        typeof newCard.tableId === "string"
       ) {
         return true;
       }

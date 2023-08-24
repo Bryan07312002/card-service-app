@@ -3,27 +3,27 @@ import IBaseModel from "@domain/models/shared/IBaseModel";
 
 export class Card extends IBaseModel<Card> {
   private _id: Uuid;
-  private _title: string;
-  private _description: string;
-  private _workspaceId: Uuid;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  private _title!: string;
+  private _description!: string;
+  private _tableId!: Uuid;
+  private _createdAt!: Date;
+  private _updatedAt!: Date;
 
   constructor(
     id: Uuid,
     title: string,
     description: string,
-    workspaceId: Uuid,
+    tableId: Uuid,
     createdAt: Date,
     updatedAt: Date,
   ) {
     super();
     this._id = id;
-    this._title = title;
-    this._description = description;
-    this._workspaceId = workspaceId;
-    this._createdAt = createdAt;
-    this._updatedAt = updatedAt;
+    this.title = title;
+    this.description = description;
+    this.tableId = tableId;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   serializeFields(): (keyof Card)[] {
@@ -31,7 +31,7 @@ export class Card extends IBaseModel<Card> {
       "id",
       "title",
       "description",
-      "workspaceId",
+      "tableId",
       "createdAt",
       "updatedAt",
     ];
@@ -43,12 +43,12 @@ export class Card extends IBaseModel<Card> {
   }
 
   // Getter and setter for 'workspaceId'
-  get workspaceId(): Uuid {
-    return this._workspaceId;
+  get tableId(): Uuid {
+    return this._tableId;
   }
 
-  set workspaceId(id: Uuid) {
-    this._workspaceId = id;
+  set tableId(id: Uuid) {
+    this._tableId = id;
     this._updatedAt = new Date();
   }
 

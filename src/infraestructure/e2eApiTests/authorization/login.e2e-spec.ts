@@ -35,4 +35,6 @@ describe("LOGIN", () => {
     loginForm.password = faker.string.sample({ min: 3, max: 50 });
     return request.agent(API).post(path).send(loginForm).expect(422);
   });
+
+  it("should auth with existing user", () => { });
 });

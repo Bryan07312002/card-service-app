@@ -16,5 +16,5 @@ export type NewWorkspace = {
 export type NewCard = {
   title: string;
   description: string;
-  workspaceId: Uuid;
+  tableId: Uuid;
 };

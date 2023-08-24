@@ -5,20 +5,20 @@ export class RegisterFormDto {
     public username: string,
     public email: string,
     public password: string,
-  ) {}
+  ) { }
 
   static isRegisterForm(value: unknown): value is RegisterFormDto {
     if (typeof value === "object" && value !== null) {
       const registerForm = value as RegisterFormDto;
 
       if (typeof registerForm.username !== "string")
-        throw new DomainError({ username: "must be defined as string" }, 422);
+        throw new DomainError({ errors: { username: "must be defined as string" } }, 422);
 
       if (typeof registerForm.email !== "string")
-        throw new DomainError({ email: "must be defined as string" }, 422);
+        throw new DomainError({ errors: { email: "must be defined as string" } }, 422);
 
       if (typeof registerForm.password !== "string")
-        throw new DomainError({ password: "must be defined as string" }, 422);
+        throw new DomainError({ errors: { password: "must be defined as string" } }, 422);
 
       return true;
     }

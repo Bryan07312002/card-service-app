@@ -4,16 +4,16 @@ import { DomainError } from "@domain/error";
 
 export class Workspace extends IBaseModel<Workspace> {
   private _id: Uuid;
-  private _name: string;
-  private _userId: string;
-  private _description: string;
+  private _name!: string;
+  private _userId!: string;
+  private _description!: string;
 
   constructor(id: Uuid, name: string, userId: string, description: string) {
     super();
     this._id = id;
-    this._name = name;
-    this._userId = userId;
-    this._description = description;
+    this.name = name;
+    this.userId = userId;
+    this.description = description;
   }
 
   serializeFields(): (keyof Workspace)[] {
@@ -21,7 +21,7 @@ export class Workspace extends IBaseModel<Workspace> {
   }
 
   // Getter and setter for 'uuid'
-  get id(): string {
+  get id(): Uuid {
     return this._id;
   }
 
@@ -36,7 +36,7 @@ export class Workspace extends IBaseModel<Workspace> {
 
   set name(name: string) {
     if (name.length < 4) {
-      throw new Error("Name must be at least 4 characters.");
+      throw new DomainError({ name: "Name must be at least 4 characters." }, 422);
     }
     this._name = name;
   }

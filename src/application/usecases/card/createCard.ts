@@ -18,7 +18,7 @@ export class CreateCardUsecase {
     private jwtRepository: IJwtRepository,
     private userRepository: IUserRepository,
     private workspaceRepository: IWorkspaceRepository,
-  ) {}
+  ) { }
 
   async authenticate(token: string): Promise<CreateCardUsecase> {
     this.userId = (
@@ -35,7 +35,7 @@ export class CreateCardUsecase {
     if (!this.userId) throw new DomainError("unauthenticated", 401);
 
     const isWorkspaceFromUser = await this.workspaceRepository.filter_one({
-      where: [{ id: newCard.workspaceId, userId: this.userId }],
+      where: [{ id: newCard.tableId, userId: this.userId }],
       select: [],
     });
 

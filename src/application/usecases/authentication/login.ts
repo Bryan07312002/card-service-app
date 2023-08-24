@@ -16,13 +16,15 @@ export class LoginUsecase {
     private userRepository: IUserRepository,
     private hashRepository: IHashRepository,
     private jwtRepository: IJwtRepository,
-  ) {}
+  ) { }
 
   async execute(form: LoginFormDto): Promise<TokenPair> {
     const u = await UserService.filter_one(
       { user: this.userRepository },
       { where: [{ email: form.email }], select: [] },
     );
+
+    if (u === null) throw new DomainError({ errors: "" }, 401);
 
     const hashedIncomingPassword = await this.hashRepository.hash(
       form.password,

@@ -18,8 +18,8 @@ describe("Workspace tests", () => {
   it("should throw an error for invalid name length", () => {
     try {
       new Workspace("a-a-a-a-a", "abc", "user123", "A description");
-    } catch (error) {
-      expect(error).toBe("Name must be at least 4 characters.");
+    } catch (error: any) {
+      expect(error.message.name).toBe("Name must be at least 4 characters.");
     }
   });
 

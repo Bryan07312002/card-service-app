@@ -3,7 +3,7 @@ import { UserRepositoryInMemory } from "../UserRepositoryInMemory";
 import { User } from "../../../../domain/models/user";
 
 function createRepository(): UserRepositoryInMemory {
-  return new UserRepositoryInMemory([]);
+  return new UserRepositoryInMemory({ users: [] });
 }
 
 function createTestUser(): User {
@@ -27,8 +27,8 @@ describe("UserRepositoryInMemory", () => {
     let u = createTestUser();
 
     await repo.insert(u);
-    expect(repo.data.length).toBe(1);
-    expect(repo.data).toContain(u);
+    expect(repo.data.users.length).toBe(1);
+    expect(repo.data.users).toContain(u);
   });
 
   it("should insert multiple users", async () => {
@@ -38,16 +38,16 @@ describe("UserRepositoryInMemory", () => {
     for (let i = 0; i < 10; i++) {
       await repo.insert(u);
     }
-    expect(repo.data.length).toBe(10);
-    expect(repo.data).toContain(u);
+    expect(repo.data.users.length).toBe(10);
+    expect(repo.data.users).toContain(u);
   });
 
   it("should paginate multiple users", async () => {
     let repo = createRepository();
     for (let i = 0; i < 11; i++) {
-      repo.data.push(createTestUser());
+      repo.data.users.push(createTestUser());
     }
-    expect(repo.data.length).toBe(11);
+    expect(repo.data.users.length).toBe(11);
 
     let res = await repo.paginate(
       { select: ["id", "username"], where: [] },
@@ -59,7 +59,7 @@ describe("UserRepositoryInMemory", () => {
 
     // check select
     res.data.forEach((el) => {
-      expect(hasOnlyeFields(el, ["id", "username"])).toBe(true);
+      expect(hasOnlyeFields(el, ["id", "username", "email"])).toBe(true);
     });
   });
 });

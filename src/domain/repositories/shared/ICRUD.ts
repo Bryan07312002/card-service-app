@@ -3,7 +3,7 @@ export interface IInsert<E> {
 }
 
 export interface IFilterOne<E> {
-  filter_one(filter: Filter<E>): Promise<E>;
+  filter_one(filter: Filter<E>): Promise<E | null>;
 }
 
 export type Paginate<E> = {

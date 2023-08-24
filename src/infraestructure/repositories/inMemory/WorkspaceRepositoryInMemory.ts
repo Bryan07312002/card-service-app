@@ -4,4 +4,6 @@ import { AbstractCrudRepositoryInMemory } from "./shared/AbstractCrudRepositoryI
 
 export class WorkspaceRepositoryInMemory
   extends AbstractCrudRepositoryInMemory<Workspace>
-  implements IWorkspaceRepository {}
+  implements IWorkspaceRepository {
+  tableName: string = 'workspaces'
+}

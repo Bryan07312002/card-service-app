@@ -38,7 +38,7 @@ export class UserService {
   static async filter_one(
     dependencies: { user: IUserRepository },
     filter: Filter<User>,
-  ): Promise<User> {
+  ): Promise<User | null> {
     return await dependencies.user.filter_one(filter);
   }
 }

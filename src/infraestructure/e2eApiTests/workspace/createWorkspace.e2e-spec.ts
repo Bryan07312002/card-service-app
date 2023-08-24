@@ -42,12 +42,25 @@ describe("workspace", () => {
   });
 
   it("should create new workspace", async () => {
+    let form: Partial<newWS> = { ...workspace, name: "workspace" };
     return request
       .agent(API)
       .post(path)
       .auth(accessToken, { type: "bearer" })
-      .send(workspace)
-      .expect(204);
+      .send(form)
+      .expect(201);
+  });
+
+  it("should create workspace with no description", async () => {
+    let form: Partial<newWS> = { ...workspace, name: "workspace with no description" };
+    delete form.description;
+
+    return request
+      .agent(API)
+      .post(path)
+      .auth(accessToken, { type: "bearer" })
+      .send(form)
+      .expect(201)
   });
 
   it("should not create workspace with no title", async () => {
@@ -66,15 +79,4 @@ describe("workspace", () => {
       });
   });
 
-  it("should create workspace with no description", async () => {
-    let form: Partial<newWS> = { ...workspace };
-    delete form.description;
-
-    return request
-      .agent(API)
-      .post(path)
-      .auth(accessToken, { type: "bearer" })
-      .send(form)
-      .expect(204);
-  });
 });

@@ -1,46 +1,31 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Context, Controller } from "../types";
-import { CreateWorkspaceUsecase } from "@application/usecases/worspace/createWorkspace";
-import { UuidRepository } from "@infraestructure/repositories/uuid/UuidRepository";
 import { JsonWebTokenJWTRepository } from "@infraestructure/repositories/jsonWebToken/JsonWebTokenRepository";
 import { WorkspaceRepositoryInMemory } from "@infraestructure/repositories/inMemory/WorkspaceRepositoryInMemory";
-import { NewWorkspace } from "@application/dtos/newWorkspace";
 import { CatchDomainError } from "../error/catchDomainError";
 import { UserRepositoryInMemory } from "@infraestructure/repositories/inMemory/UserRepositoryInMemory";
 import { DeleteWorkspaceById } from "@application/usecases/worspace/deleteWorkspace";
 import { isUuid } from "@application/usecases/shared/utilsValidators";
-import { PaginateWorkspacesByUserUuid } from "@application/usecases/worspace/paginateWorkspace";
+import { GetFullTableById } from "@application/usecases/worspace/getFullTableById";
+import { TableRepositoryInMemory } from "@infraestructure/repositories/inMemory/TableRepositoryInMemory";
+import { CardRepositoryInMemory } from "@infraestructure/repositories/inMemory/CardRepositoryInMemory";
+import { createWorkspace as createWorkspaceController } from "@infraestructure/controllers/workspace/createWorkspace";
+import { paginateWorkspaceByUserUuid as paginateWorkspaceByUserUuidController } from "@infraestructure/controllers/workspace/paginateWorkspaceByUserUuid";
 
 async function createWorkspace(
   req: FastifyRequest,
   res: FastifyReply,
   context: Context,
 ) {
-  const uuid = new UuidRepository();
-  const jwt = new JsonWebTokenJWTRepository(context.jwtSecret);
-  const workspace = new WorkspaceRepositoryInMemory(context.DbPool.workspaces);
-  const user = new UserRepositoryInMemory(context.DbPool.users);
-  try {
-    const body = req.body;
-    if (NewWorkspace.isNewWorkspace(body)) {
-      (
-        await new CreateWorkspaceUsecase(
-          workspace,
-          jwt,
-          uuid,
-          user,
-        ).authenticate(req.headers.authorization?.slice(7) ?? "")
-      ).execute(body);
-
-      return res.code(204).send();
-    }
-  } catch (e) {
-    if (CatchDomainError.isDomainError(e)) {
-      return new CatchDomainError(e).toFasfyReply(res);
-    }
-
-    res.send("InternalServerError").code(500);
-  }
+  return res
+    .code(201)
+    .send(
+      await createWorkspaceController(
+        req.body,
+        req.headers.authorization?.slice(7) ?? "",
+        context
+      )
+    );
 }
 
 async function deleteWorkspaceById(
@@ -77,24 +62,54 @@ async function paginateWorkspaceByUserUuid(
   res: FastifyReply,
   context: Context,
 ): Promise<FastifyReply> {
+  return res
+    .code(200)
+    .send(
+      await paginateWorkspaceByUserUuidController(
+        (req.query as any).take,
+        (req.query as any).take,
+        req.headers.authorization,
+        context
+      )
+    );
+}
+
+async function getFullWorkspace(
+  req: FastifyRequest,
+  res: FastifyReply,
+  context: Context,
+) {
   const jwt = new JsonWebTokenJWTRepository(context.jwtSecret);
   const workspace = new WorkspaceRepositoryInMemory(context.DbPool.workspaces);
   const user = new UserRepositoryInMemory(context.DbPool.users);
+  const table = new TableRepositoryInMemory(context.DbPool.tables);
+  const card = new CardRepositoryInMemory(context.DbPool.cards);
+  const usecase = new GetFullTableById(workspace, table, card, user, jwt);
 
   try {
-    const take = ((req.query as any).take as number) ?? 10;
-    const page = ((req.query as any).take as number) ?? 1;
+    const id = ((req.params as any).id as string) ?? undefined;
+    if (!isUuid(id)) return;
 
-    if (isNaN(take)) return res.send().code(400);
-    if (isNaN(page)) return res.send().code(400);
+    await usecase.authenticate(req.headers.authorization?.slice(7) ?? "")
+    const fullWs = await usecase.execute(id);
+    const json: any = {
+      name: fullWs.name,
+      description: fullWs.description,
+      tables: fullWs.tables.map(el => {
+        const jsonCards = el.cards.map(c => {
+          const card: any = c.toJson();
+          delete card.tableId;
+        })
+        const jsonTable: any = el.toJson();
 
-    const worksapaces = await (
-      await new PaginateWorkspacesByUserUuid(workspace, jwt, user).authenticate(
-        req.headers.authorization?.slice(7) ?? "",
-      )
-    ).execute({ take, page });
-
-    return res.send(worksapaces).code(200);
+        return {
+          id: jsonTable.id,
+          title: json.title,
+          cards: jsonCards,
+        }
+      })
+    }
+    return res.code(200).send()
   } catch (e) {
     if (CatchDomainError.isDomainError(e)) {
       return new CatchDomainError(e).toFasfyReply(res);

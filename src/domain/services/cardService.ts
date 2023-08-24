@@ -18,7 +18,7 @@ export class CardService {
       dependencies.uuid.createV4(),
       cardDto.title,
       cardDto.description,
-      cardDto.workspaceId,
+      cardDto.tableId,
       new Date(),
       new Date(),
     );

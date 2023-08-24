@@ -16,7 +16,7 @@ export class CreateWorkspaceUsecase {
     private jwtRepository: IJwtRepository,
     private uuidRepository: IUuidRepository,
     private userRepository: IUserRepository,
-  ) {}
+  ) { }
 
   async authenticate(token: string) {
     this.userId = (
@@ -32,7 +32,7 @@ export class CreateWorkspaceUsecase {
   async execute(newWorkspace: NewWorkspace) {
     if (!this.userId) throw new DomainError("unauthenticated", 401);
 
-    WorkspaceService.create(
+    return WorkspaceService.create(
       {
         uuid: this.uuidRepository,
         workspace: this.workspaceRespository,

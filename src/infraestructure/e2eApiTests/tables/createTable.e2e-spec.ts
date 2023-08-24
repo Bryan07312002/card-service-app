@@ -2,15 +2,12 @@ import { describe, it, expect, beforeEach, beforeAll } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 import * as request from "supertest";
 import { RegisterFormDto } from "@application/dtos/registerForm";
-import { NewWorkspace } from "@application/dtos/newWorkspace";
 import { API } from "../shared/constants";
+import { Uuid } from "@domain/types";
+import { NewTable } from "@application/dtos/newTable";
 
-type newWS = NewWorkspace & {
-  userId?: string;
-};
-
-describe("workspace", () => {
-  const path: string = "/workspace";
+describe("table", () => {
+  const path: string = "/tables";
 
   let accessToken: string;
   let loginForm: RegisterFormDto;
@@ -27,43 +24,48 @@ describe("workspace", () => {
       .agent(API)
       .post("/login")
       .send(loginForm)
+      .expect(200)
       .then(({ body }) => {
         expect(body.access).toBeDefined();
         accessToken = body.access;
       });
   });
 
-  let workspace: any;
-  beforeEach(() => {
-    workspace = {
-      name: faker.word.sample(),
-      description: faker.lorem.text(),
-    };
+  let workspaceId: Uuid;
+  let table: NewTable;
+
+  beforeEach(async () => {
+    await request
+      .agent(API)
+      .post("/workspace")
+      .auth(accessToken, { type: "bearer" })
+      .send({
+        name: faker.word.sample(),
+        description: faker.lorem.text(),
+      })
+      .expect(201).then(({ body }) => {
+        expect(body.id).toBeDefined();
+        workspaceId = body.id;
+      });
+
+    table = {
+      title: faker.word.sample(),
+      workspaceId: workspaceId,
+    }
   });
 
-  it("should recive at least one workspace", async () => {
-    await request
+  it("should create table correctly", async () => {
+    const t = { ...table, title: "card title" };
+    return request
       .agent(API)
       .post(path)
       .auth(accessToken, { type: "bearer" })
-      .send(workspace)
-      .expect(201);
-
-    return request
-      .agent(API)
-      .get(path)
-      .auth(accessToken, { type: "bearer" })
-      .expect(200)
+      .send(t)
+      .expect(201)
       .then(({ body }) => {
-        expect(body.data).toBeDefined();
-        expect(body.count).toBeDefined();
-        expect(body.page).toBeDefined();
-
-        for (const i in body.data) {
-          expect(body.data[i].id).toBeDefined();
-          expect(body.data[i].name).toBeDefined();
-          expect(body.data[i].description).toBeDefined();
-        }
-      });
-  });
+        expect(body.id).toBeDefined()
+        expect(body.title).toBe(t.title)
+        expect(body.workspaceId).toBe(t.workspaceId)
+      })
+  })
 });

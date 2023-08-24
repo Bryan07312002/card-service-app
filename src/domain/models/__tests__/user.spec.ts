@@ -29,7 +29,7 @@ describe("User class tests", () => {
     }
     expect(err).toEqual(
       new DomainError(
-        { username: "Username must be between 3 and 20 characters." },
+        { errors: { username: "Username must be between 3 and 20 characters." } },
         422,
       ),
     );
@@ -48,7 +48,7 @@ describe("User class tests", () => {
       err = e;
     }
     expect(err).toEqual(
-      new DomainError({ email: "Invalid email format." }, 422),
+      new DomainError({ errors: { email: "Invalid email format." } }, 422),
     );
   });
 
@@ -66,7 +66,7 @@ describe("User class tests", () => {
     }
     expect(err).toEqual(
       new DomainError(
-        { password: "Password must be at least 5 characters." },
+        { errors: { password: "Password must be at least 5 characters." } },
         422,
       ),
     );

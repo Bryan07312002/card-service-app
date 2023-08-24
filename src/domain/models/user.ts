@@ -4,21 +4,15 @@ import { DomainError } from "@domain/error";
 
 export class User extends IBaseModel<User> {
   private _id: Uuid;
-  private _username: string;
-  private _email: string;
-  private _password: string;
+  private _username!: string;
+  private _email!: string;
+  private _password!: string;
 
   constructor(id: Uuid, username: string, email: string, password: string) {
     super();
     this._id = id;
-
-    this._username = username;
     this.username = username;
-
-    this._email = email;
     this.email = email;
-
-    this._password = password;
     this.password = password;
   }
 
@@ -40,7 +34,9 @@ export class User extends IBaseModel<User> {
     } else {
       throw new DomainError(
         {
-          username: "Username must be between 3 and 20 characters.",
+          errors: {
+            username: "Username must be between 3 and 20 characters.",
+          }
         },
         422,
       );
@@ -56,7 +52,7 @@ export class User extends IBaseModel<User> {
     if (emailPattern.test(email)) {
       this._email = email;
     } else {
-      throw new DomainError({ email: "Invalid email format." }, 422);
+      throw new DomainError({ errors: { email: "Invalid email format." } }, 422);
     }
   }
 
@@ -66,7 +62,9 @@ export class User extends IBaseModel<User> {
     } else {
       throw new DomainError(
         {
-          password: "Password must be at least 5 characters.",
+          errors: {
+            password: "Password must be at least 5 characters.",
+          }
         },
         422,
       );
