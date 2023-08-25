@@ -2,18 +2,24 @@ import { IUuidRepository } from "../repositories/IUuidRepository";
 import { ICardRepository } from "@domain/repositories/ICardRepository";
 import { Paginate, Filter, Args } from "../repositories/shared/ICRUD";
 import { Card } from "@domain/models/card";
-import { NewCard, Uuid } from "@domain/types";
-import { IWorkspaceRepository } from "@domain/repositories/IWorkspaceRepository";
+import { NewCard } from "@domain/types";
+import { ITableRepository } from "@domain/repositories/ITableRepostory";
+import { DomainError } from "@domain/error";
 
 export class CardService {
   static async create(
     dependencies: {
       card: ICardRepository;
+      table: ITableRepository;
       uuid: IUuidRepository;
     },
     cardDto: NewCard,
   ): Promise<Card> {
-    // TODO: validation
+    // check if table exists
+    const TablExists = await dependencies.table.filter_one({ where: [{ id: cardDto.tableId }], select: [] });
+    if (!TablExists)
+      throw new DomainError({ errors: { tableId: "doesn't exists" } }, 422);
+
     const workspace = new Card(
       dependencies.uuid.createV4(),
       cardDto.title,
@@ -24,17 +30,6 @@ export class CardService {
     );
 
     return await dependencies.card.insert(workspace);
-  }
-
-  static async canCreateCard(
-    dependencies: { workspace: IWorkspaceRepository },
-    userId: Uuid,
-    workspaceId: Uuid,
-  ) {
-    await dependencies.workspace.filter_one({
-      where: [{ id: workspaceId, userId: userId }],
-      select: [],
-    });
   }
 
   static async paginate(
@@ -50,7 +45,7 @@ export class CardService {
   static async filter_one(
     dependencies: { card: ICardRepository },
     filter: Filter<Card>,
-  ): Promise<Card> {
+  ): Promise<Card | null> {
     return await dependencies.card.filter_one(filter);
   }
 

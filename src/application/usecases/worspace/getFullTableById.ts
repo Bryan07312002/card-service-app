@@ -49,6 +49,9 @@ export class GetFullWorkspaceByUuid {
       { where: [{ id }], select: [] }
     );
 
+    if (!workspace)
+      throw new DomainError({ errors: "workspace does not exists" }, 404);
+
     const tables: Table[] = (
       await this.tableRepository.paginate(
         { where: [{ workspaceId: workspace.id }], select: [] },

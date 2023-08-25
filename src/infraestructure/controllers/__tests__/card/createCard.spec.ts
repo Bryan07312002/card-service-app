@@ -2,16 +2,15 @@ import { describe, it, beforeEach, expect, beforeAll } from "@jest/globals";
 import { Context } from "@infraestructure/controllers/types";
 import { register } from "@infraestructure/controllers/authentication/registerController";
 import { RegisterFormDto } from "@application/dtos/registerForm";
-import { NewCard, Uuid } from "@domain/types";
+import { Uuid } from "@domain/types";
 import { login } from "@infraestructure/controllers/authentication/loginControllers";
 import { createWorkspace } from "@infraestructure/controllers/workspace/createWorkspace";
-import { NewTable } from "@application/dtos/newTable";
 import { createTable } from "@infraestructure/controllers/tables/createTable";
 import { NewCardDto } from "@application/dtos/NewCard";
 import { createCardController } from "@infraestructure/controllers/card/createCard";
 import { DomainError } from "@domain/error";
 
-describe("createTable Controller", () => {
+describe("createCard Controller", () => {
   let context: Context;
 
   const registerForm: RegisterFormDto = {
@@ -50,7 +49,7 @@ describe("createTable Controller", () => {
 
   let card: NewCardDto;
   beforeEach(async () => {
-    context.DbPool.tables = [];
+    context.DbPool.cards = [];
 
     card = {
       title: "test Card",
@@ -87,6 +86,7 @@ describe("createTable Controller", () => {
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
       if (!(e instanceof DomainError)) throw "";
+      expect(e.code).toBe(422);
       expect(e.message.errors.tableId).toBeDefined();
     }
   });
@@ -100,8 +100,25 @@ describe("createTable Controller", () => {
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
       if (!(e instanceof DomainError)) throw "";
+      expect(e.code).toBe(422);
       expect(e.message.errors.title).toBeDefined();
     }
   });
+
+
+  it("should not create card with tableId that doesnt exists", async () => {
+    const c: any = { ...card };
+    c.tableId = "IdDoesNotExists";
+    try {
+      await createCardController(c, token, context);
+      throw "should not get here"
+    } catch (e) {
+      expect(e).toBeInstanceOf(DomainError);
+      if (!(e instanceof DomainError)) throw "";
+      expect(e.code).toBe(422);
+      expect(e.message.errors.tableId).toBeDefined();
+    }
+  });
+
 });
 
