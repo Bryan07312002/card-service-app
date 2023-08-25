@@ -20,7 +20,7 @@ export async function getFullWorkspaceByUuid(
   const card = new CardRepositoryInMemory(context.DbPool.cards);
   const usecase = new GetFullWorkspaceByUuid(workspace, table, card, user, jwt);
 
-  if (!isUuid(id)) return;
+  if (!isUuid(id)) throw "not uuid";
   await usecase.authenticate(isJwtToken(token) ? token.slice(7) : '')
   const fullWs = await usecase.execute(id);
 

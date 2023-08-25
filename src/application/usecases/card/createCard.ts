@@ -41,7 +41,7 @@ export class CreateCardUsecase {
 
     if (!isWorkspaceFromUser) throw new DomainError("cant create card", 422);
 
-    CardService.create(
+    return CardService.create(
       {
         uuid: this.uuidRepository,
         card: this.CardRespository,
