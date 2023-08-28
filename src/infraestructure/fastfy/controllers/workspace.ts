@@ -1,11 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Context, Controller } from "../types";
-import { JsonWebTokenJWTRepository } from "@infraestructure/repositories/jsonWebToken/JsonWebTokenRepository";
-import { WorkspaceRepositoryInMemory } from "@infraestructure/repositories/inMemory/WorkspaceRepositoryInMemory";
-import { CatchDomainError } from "../error/catchDomainError";
-import { UserRepositoryInMemory } from "@infraestructure/repositories/inMemory/UserRepositoryInMemory";
-import { DeleteWorkspaceById } from "@application/usecases/worspace/deleteWorkspace";
-import { isUuid } from "@application/usecases/shared/utilsValidators";
 import { createWorkspace as createWorkspaceController } from "@infraestructure/controllers/workspace/createWorkspace";
 import { paginateWorkspaceByUserUuid as paginateWorkspaceByUserUuidController } from "@infraestructure/controllers/workspace/paginateWorkspaceByUserUuid";
 import { getFullWorkspaceByUuid } from "@infraestructure/controllers/workspace/getFullWorkspaceByUuid";
@@ -24,35 +18,6 @@ async function createWorkspace(
         context
       )
     );
-}
-
-async function deleteWorkspaceById(
-  req: FastifyRequest,
-  res: FastifyReply,
-  context: Context,
-): Promise<FastifyReply> {
-  const jwt = new JsonWebTokenJWTRepository(context.jwtSecret);
-  const workspace = new WorkspaceRepositoryInMemory(context.DbPool.workspaces);
-  const user = new UserRepositoryInMemory(context.DbPool.users);
-
-  try {
-    const id = ((req.params as any).id as string) ?? undefined;
-    if (!isUuid(id)) return res.send().code(204);
-
-    (
-      await new DeleteWorkspaceById(workspace, jwt, user).authenticate(
-        req.headers.authorization?.slice(7) ?? "",
-      )
-    ).execute(id);
-
-    return res.send().code(204);
-  } catch (e) {
-    if (CatchDomainError.isDomainError(e)) {
-      return new CatchDomainError(e).toFasfyReply(res);
-    }
-
-    return res.send("InternalServerError").code(500);
-  }
 }
 
 async function paginateWorkspaceByUserUuid(
