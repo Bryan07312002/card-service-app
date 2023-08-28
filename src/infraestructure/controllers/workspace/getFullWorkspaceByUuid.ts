@@ -14,10 +14,10 @@ export async function getFullWorkspaceByUuid(
   context: Context,
 ) {
   const jwt = new JsonWebTokenJWTRepository(context.jwtSecret);
-  const workspace = new WorkspaceRepositoryInMemory(context.DbPool.workspaces);
-  const user = new UserRepositoryInMemory(context.DbPool.users);
-  const table = new TableRepositoryInMemory(context.DbPool.tables);
-  const card = new CardRepositoryInMemory(context.DbPool.cards);
+  const workspace = new WorkspaceRepositoryInMemory(context.DbPool);
+  const user = new UserRepositoryInMemory(context.DbPool);
+  const table = new TableRepositoryInMemory(context.DbPool);
+  const card = new CardRepositoryInMemory(context.DbPool);
   const usecase = new GetFullWorkspaceByUuid(workspace, table, card, user, jwt);
 
   if (!isUuid(id)) throw "not uuid";
@@ -28,11 +28,11 @@ export async function getFullWorkspaceByUuid(
     name: fullWs.name,
     description: fullWs.description,
     tables: fullWs.tables.map(el => {
+      const jsonTable: any = el;
       const jsonCards = el.cards.map(c => {
         const card: any = c.toJson();
         delete card.tableId;
       })
-      const jsonTable: any = el.toJson();
 
       return {
         id: jsonTable.id,

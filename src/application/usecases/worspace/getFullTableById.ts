@@ -14,6 +14,7 @@ import { ICardRepository } from "@domain/repositories/ICardRepository";
 type fullTable = Table & { cards: Card[] };
 
 export type FullWorkspace = {
+  id: Uuid,
   name: string,
   description: string,
   tables: fullTable[],
@@ -71,12 +72,14 @@ export class GetFullWorkspaceByUuid {
       const tableId = tables[i].id;
       const filtredCards = cards.filter(el => el.tableId === tableId);
       fullTables.push({
-        ...tables[i],
+        id: tables[i].id,
+        title: tables[i].title,
         cards: filtredCards
       } as any)
     }
 
     return {
+      id: workspace.id,
       name: workspace.name,
       description: workspace.description,
       tables: fullTables,

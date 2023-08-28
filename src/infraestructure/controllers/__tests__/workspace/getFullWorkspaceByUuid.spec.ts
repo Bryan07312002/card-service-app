@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, beforeAll } from "@jest/globals";
+import { describe, it, expect, beforeAll } from "@jest/globals";
 import { Context } from "@infraestructure/controllers/types";
 import { register } from "@infraestructure/controllers/authentication/registerController";
 import { RegisterFormDto } from "@application/dtos/registerForm";
@@ -6,7 +6,8 @@ import { Uuid } from "@domain/types";
 import { login } from "@infraestructure/controllers/authentication/loginControllers";
 import { createWorkspace } from "@infraestructure/controllers/workspace/createWorkspace";
 import { createTable } from "@infraestructure/controllers/tables/createTable";
-import { NewCardDto } from "@application/dtos/NewCard";
+import { createCardController } from "@infraestructure/controllers/card/createCard";
+import { getFullWorkspaceByUuid } from "@infraestructure/controllers/workspace/getFullWorkspaceByUuid";
 
 describe("getFullWorkspaceByUuid Controller", () => {
   let context: Context;
@@ -18,7 +19,9 @@ describe("getFullWorkspaceByUuid Controller", () => {
   }
   let token: string;
   let userId: Uuid;
+  let workspaceId: Uuid;
   let tableId: Uuid;
+  let cardId: Uuid;
   beforeAll(async () => {
     context = {
       hashSalt: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -31,31 +34,36 @@ describe("getFullWorkspaceByUuid Controller", () => {
     userId = id
     token = "Bearer " + (await login(registerForm, context)).access
 
-    const result = await createWorkspace({
+    const WorkspaceResult = await createWorkspace({
       name: "test workspace",
       description: "this is a test description for this Workspace",
     }, token, context)
 
+    workspaceId = WorkspaceResult.id;
+
     const response = await createTable({
       title: "test table",
-      workspaceId: result.id,
+      workspaceId: WorkspaceResult.id,
     }, token, context);
 
     tableId = response?.id as Uuid;
+
+    const cardResult = await createCardController(
+      {
+        title: "test Card",
+        description: "test description",
+        tableId,
+      },
+      token,
+      context
+    );
+    cardId = cardResult.id as Uuid;
   })
 
+  it("should get full workspace correctly", async () => {
+    const fullWs = await getFullWorkspaceByUuid(workspaceId, token, context);
 
-  let card: NewCardDto;
-  beforeEach(async () => {
-    context.DbPool.tables = [];
-
-    card = {
-      title: "test Card",
-      description: "test description",
-      tableId,
-    }
-  })
-
-  it("should not create card with no title", async () => { });
+    expect(fullWs.tables.find((el) => el.id == tableId)).toBeDefined()
+  });
 });
 
