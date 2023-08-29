@@ -3,6 +3,7 @@ import { Context, Controller } from "../types";
 import { createWorkspace as createWorkspaceController } from "@infraestructure/controllers/workspace/createWorkspace";
 import { paginateWorkspaceByUserUuid as paginateWorkspaceByUserUuidController } from "@infraestructure/controllers/workspace/paginateWorkspaceByUserUuid";
 import { getFullWorkspaceByUuid } from "@infraestructure/controllers/workspace/getFullWorkspaceByUuid";
+import { deleteWorkspaceByIdController } from "@infraestructure/controllers/workspace/deleteWorkspaceController";
 
 async function createWorkspace(
   req: FastifyRequest,
@@ -31,6 +32,22 @@ async function paginateWorkspaceByUserUuid(
       await paginateWorkspaceByUserUuidController(
         (req.query as any).take,
         (req.query as any).take,
+        req.headers.authorization,
+        context
+      )
+    );
+}
+
+
+async function deleteWorkspace(
+  req: FastifyRequest,
+  res: FastifyReply,
+  context: Context,
+) {
+  return res
+    .code(204)
+    .send(
+      await deleteWorkspaceByIdController((req.params as any).id,
         req.headers.authorization,
         context
       )
@@ -71,4 +88,10 @@ export const WORKSPACE_CONTROLLERS: Controller[] = [
     defaultCode: 200,
     method: "get",
   },
+  {
+    path: "/workspace/:id",
+    handler: deleteWorkspace,
+    defaultCode: 204,
+    method: "delete",
+  }
 ];
