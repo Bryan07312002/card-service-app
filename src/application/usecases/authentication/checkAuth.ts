@@ -8,7 +8,7 @@ export class checkAuthUsecase {
   constructor(
     private jwtRepository: IJwtRepository,
     private userRepository: IUserRepository,
-  ) {}
+  ) { }
 
   async execute(token: string) {
     const claim: any = JwtService.checkAccess(

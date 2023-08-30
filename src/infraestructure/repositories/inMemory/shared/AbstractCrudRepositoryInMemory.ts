@@ -49,6 +49,7 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   }
 
   async delete(filter: Filter<E>): Promise<void> {
+
     const result = this.data[this.tableName].findIndex((obj: E) =>
       filter.where.every((criteria) => this.customFilter(obj, criteria)),
     );
