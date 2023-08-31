@@ -18,7 +18,7 @@ export class CreateCardUsecase {
     private jwtRepository: IJwtRepository,
     private userRepository: IUserRepository,
     private tableRepository: ITableRepository,
-  ) { }
+  ) {}
 
   async authenticate(token: string): Promise<CreateCardUsecase> {
     this.userId = (

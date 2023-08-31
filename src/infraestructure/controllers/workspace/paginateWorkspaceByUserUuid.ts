@@ -17,12 +17,12 @@ export async function paginateWorkspaceByUserUuid(
   const user = new UserRepositoryInMemory(context.DbPool);
   const usecase = new PaginateWorkspacesByUserUuid(workspace, jwt, user);
 
-  await usecase.authenticate(isJwtToken(token) ? token.slice(7) : '')
+  await usecase.authenticate(isJwtToken(token) ? token.slice(7) : "");
 
   const paginateWorkspaces = await usecase.execute({
     take: isConvertibleToNumber(take) ? Number(take) : 10,
     page: isConvertibleToNumber(page) ? Number(page) : 1,
   });
 
-  return paginateWorkspaces
+  return paginateWorkspaces;
 }

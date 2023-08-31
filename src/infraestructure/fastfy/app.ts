@@ -33,7 +33,7 @@ async function main() {
           return new CatchDomainError(e).toFasfyReply(reply);
         }
 
-        console.log(e)
+        console.log(e);
         return reply.code(500).send({ error: "internal server error" });
       }
     });

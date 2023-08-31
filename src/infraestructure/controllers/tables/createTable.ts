@@ -18,8 +18,9 @@ export async function createTable(
   const jwt = new JsonWebTokenJWTRepository(context.jwtSecret);
   const usecase = new CreateTableUsecase(table, uuid, user, jwt);
 
-  if (!NewTable.isNewTable(body)) { throw "" }
-  await usecase.authenticate(isJwtToken(token) ? token.slice(7) : '')
-  return await usecase.execute(body)
+  if (!NewTable.isNewTable(body)) {
+    throw "";
+  }
+  await usecase.authenticate(isJwtToken(token) ? token.slice(7) : "");
+  return await usecase.execute(body);
 }
-

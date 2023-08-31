@@ -15,7 +15,7 @@ describe("createTable Controller", () => {
     username: "testerson",
     email: "testerson@gmail.com",
     password: "secret",
-  }
+  };
   let token: string;
   let userId: Uuid;
   let workspaceId: Uuid;
@@ -26,19 +26,22 @@ describe("createTable Controller", () => {
       DbPool: { users: [], workspaces: [], tables: [] },
     };
 
-    const { id } = await register(registerForm, context) as any;
-    expect(id).toBeDefined()
-    userId = id
-    token = "Bearer " + (await login(registerForm, context)).access
+    const { id } = (await register(registerForm, context)) as any;
+    expect(id).toBeDefined();
+    userId = id;
+    token = "Bearer " + (await login(registerForm, context)).access;
 
-    const result = await createWorkspace({
-      name: "test workspace",
-      description: "this is a test description for this Workspace",
-    }, token, context)
+    const result = await createWorkspace(
+      {
+        name: "test workspace",
+        description: "this is a test description for this Workspace",
+      },
+      token,
+      context,
+    );
 
-    workspaceId = result.id
-  })
-
+    workspaceId = result.id;
+  });
 
   let table: NewTable;
   beforeEach(async () => {
@@ -46,9 +49,9 @@ describe("createTable Controller", () => {
 
     table = {
       title: "test table",
-      workspaceId: workspaceId
-    }
-  })
+      workspaceId: workspaceId,
+    };
+  });
 
   it("should create table correctly", async () => {
     const t = { ...table };

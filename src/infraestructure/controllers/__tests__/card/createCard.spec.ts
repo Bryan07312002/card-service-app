@@ -17,7 +17,7 @@ describe("createCard Controller", () => {
     username: "testerson",
     email: "testerson@gmail.com",
     password: "secret",
-  }
+  };
   let token: string;
   let userId: Uuid;
   let tableId: Uuid;
@@ -28,24 +28,31 @@ describe("createCard Controller", () => {
       DbPool: { users: [], workspaces: [], tables: [], cards: [] },
     };
 
-    const { id } = await register(registerForm, context) as any;
-    expect(id).toBeDefined()
-    userId = id
-    token = "Bearer " + (await login(registerForm, context)).access
+    const { id } = (await register(registerForm, context)) as any;
+    expect(id).toBeDefined();
+    userId = id;
+    token = "Bearer " + (await login(registerForm, context)).access;
 
-    const result = await createWorkspace({
-      name: "test workspace",
-      description: "this is a test description for this Workspace",
-    }, token, context)
+    const result = await createWorkspace(
+      {
+        name: "test workspace",
+        description: "this is a test description for this Workspace",
+      },
+      token,
+      context,
+    );
 
-    const response = await createTable({
-      title: "test table",
-      workspaceId: result.id,
-    }, token, context);
+    const response = await createTable(
+      {
+        title: "test table",
+        workspaceId: result.id,
+      },
+      token,
+      context,
+    );
 
     tableId = response?.id as Uuid;
-  })
-
+  });
 
   let card: NewCardDto;
   beforeEach(async () => {
@@ -55,8 +62,8 @@ describe("createCard Controller", () => {
       title: "test Card",
       description: "test description",
       tableId,
-    }
-  })
+    };
+  });
 
   it("should create card correctly", async () => {
     const c = { ...card };
@@ -82,7 +89,7 @@ describe("createCard Controller", () => {
     delete c.tableId;
     try {
       await createCardController(c, token, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
       if (!(e instanceof DomainError)) throw "";
@@ -96,7 +103,7 @@ describe("createCard Controller", () => {
     delete c.title;
     try {
       await createCardController(c, token, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
       if (!(e instanceof DomainError)) throw "";
@@ -105,13 +112,12 @@ describe("createCard Controller", () => {
     }
   });
 
-
   it("should not create card with tableId that doesnt exists", async () => {
     const c: any = { ...card };
     c.tableId = "IdDoesNotExists";
     try {
       await createCardController(c, token, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
       if (!(e instanceof DomainError)) throw "";
@@ -119,6 +125,4 @@ describe("createCard Controller", () => {
       expect(e.message.errors.tableId).toBeDefined();
     }
   });
-
 });
-

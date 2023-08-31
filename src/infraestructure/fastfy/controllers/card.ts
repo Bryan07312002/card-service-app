@@ -10,11 +10,7 @@ async function createCard(
   return res
     .code(201)
     .send(
-      await createCardController(
-        req.body,
-        req.headers.authorization,
-        context
-      )
+      await createCardController(req.body, req.headers.authorization, context),
     );
 }
 

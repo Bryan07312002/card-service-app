@@ -9,7 +9,7 @@ import { Table } from "../models/table";
 
 export interface ITableRepository
   extends IInsert<Table>,
-  IFilterOne<Table>,
-  IPaginate<Table>,
-  IDeleteOne<Table>,
-  IUpdateOne<Table> { }
+    IFilterOne<Table>,
+    IPaginate<Table>,
+    IDeleteOne<Table>,
+    IUpdateOne<Table> {}

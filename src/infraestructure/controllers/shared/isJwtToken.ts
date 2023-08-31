@@ -7,13 +7,13 @@ export function throwInvalidJwtToken(): boolean {
 export function isJwtToken(e: unknown): e is string {
   // Check if the value is a string.
   if (!(typeof e === "string")) {
-    return throwInvalidJwtToken()
+    return throwInvalidJwtToken();
   }
 
   // Split the string into three parts.
   const parts = e.split(".");
   if (parts.length !== 3) {
-    return throwInvalidJwtToken()
+    return throwInvalidJwtToken();
   }
 
   return true;
@@ -25,5 +25,4 @@ export function isJwtToken(e: unknown): e is string {
   // if (typ !== "JWT") {
   //   return throwInvalidJwtToken()
   // }
-
-} 
+}

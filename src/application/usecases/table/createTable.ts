@@ -17,7 +17,7 @@ export class CreateTableUsecase {
     private uuidRepository: IUuidRepository,
     private userRepository: IUserRepository,
     private jwtRepository: IJwtRepository,
-  ) { }
+  ) {}
 
   async authenticate(token: string): Promise<CreateTableUsecase> {
     this.userId = (
@@ -33,6 +33,9 @@ export class CreateTableUsecase {
   async execute(newTable: NewTable): Promise<Table> {
     if (!this.userId) throw new DomainError("unauthenticated", 401);
 
-    return TableService.create({ uuid: this.uuidRepository, table: this.tableRepository }, { ...newTable, title: newTable.title ?? null });
+    return TableService.create(
+      { uuid: this.uuidRepository, table: this.tableRepository },
+      { ...newTable, title: newTable.title ?? null },
+    );
   }
 }

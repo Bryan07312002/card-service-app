@@ -4,7 +4,7 @@ import { AbstractCrudRepositoryInMemory } from "./shared/AbstractCrudRepositoryI
 
 export class UserRepositoryInMemory
   extends AbstractCrudRepositoryInMemory<User>
-  implements IUserRepository {
-  tableName: string = 'users'
-
+  implements IUserRepository
+{
+  tableName: string = "users";
 }

@@ -3,5 +3,5 @@ import { User } from "../models/user";
 
 export interface IUserRepository
   extends IInsert<User>,
-  IFilterOne<User>,
-  IPaginate<User> { }
+    IFilterOne<User>,
+    IPaginate<User> {}

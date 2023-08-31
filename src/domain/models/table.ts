@@ -9,14 +9,12 @@ export class Table extends IBaseModel<Table> {
   constructor(id: Uuid, title: string, workspaceId: string) {
     super();
     this._id = id;
-    this.title = title;     // Using the setter for title
-    this.workspaceId = workspaceId;     // Using the setter for workspaceId
+    this.title = title; // Using the setter for title
+    this.workspaceId = workspaceId; // Using the setter for workspaceId
   }
 
   serializeFields(): (keyof Table)[] {
-    return [
-      "id", "title", "workspaceId"
-    ]
+    return ["id", "title", "workspaceId"];
   }
 
   // Getter for id
@@ -42,4 +40,3 @@ export class Table extends IBaseModel<Table> {
     this._workspaceId = workspaceId;
   }
 }
-

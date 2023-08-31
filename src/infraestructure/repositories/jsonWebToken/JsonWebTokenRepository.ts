@@ -3,7 +3,7 @@ import { IJwtRepository } from "@domain/repositories/IJwtRepository";
 import { sign, verify, JsonWebTokenError } from "jsonwebtoken";
 
 export class JsonWebTokenJWTRepository implements IJwtRepository {
-  constructor(public secret: string) { }
+  constructor(public secret: string) {}
 
   sign(payload: object): string {
     return sign(payload, this.secret, { expiresIn: "1h" });

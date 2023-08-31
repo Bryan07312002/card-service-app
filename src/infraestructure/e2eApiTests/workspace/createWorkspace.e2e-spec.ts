@@ -52,7 +52,10 @@ describe("workspace", () => {
   });
 
   it("should create workspace with no description", async () => {
-    let form: Partial<newWS> = { ...workspace, name: "workspace with no description" };
+    let form: Partial<newWS> = {
+      ...workspace,
+      name: "workspace with no description",
+    };
     delete form.description;
 
     return request
@@ -60,7 +63,7 @@ describe("workspace", () => {
       .post(path)
       .auth(accessToken, { type: "bearer" })
       .send(form)
-      .expect(201)
+      .expect(201);
   });
 
   it("should not create workspace with no title", async () => {
@@ -78,5 +81,4 @@ describe("workspace", () => {
         expect(body.error.name).toBeDefined();
       });
   });
-
 });

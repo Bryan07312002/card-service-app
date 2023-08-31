@@ -27,14 +27,7 @@ export class Card extends IBaseModel<Card> {
   }
 
   serializeFields(): (keyof Card)[] {
-    return [
-      "id",
-      "title",
-      "description",
-      "tableId",
-      "createdAt",
-      "updatedAt",
-    ];
+    return ["id", "title", "description", "tableId", "createdAt", "updatedAt"];
   }
 
   // Getter and setter for 'id'

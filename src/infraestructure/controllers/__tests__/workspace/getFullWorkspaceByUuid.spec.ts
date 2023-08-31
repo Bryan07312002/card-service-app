@@ -16,7 +16,7 @@ describe("getFullWorkspaceByUuid Controller", () => {
     username: "testerson",
     email: "testerson@gmail.com",
     password: "secret",
-  }
+  };
   let token: string;
   let userId: Uuid;
   let workspaceId: Uuid;
@@ -29,22 +29,30 @@ describe("getFullWorkspaceByUuid Controller", () => {
       DbPool: { users: [], workspaces: [], tables: [], cards: [] },
     };
 
-    const { id } = await register(registerForm, context) as any;
-    expect(id).toBeDefined()
-    userId = id
-    token = "Bearer " + (await login(registerForm, context)).access
+    const { id } = (await register(registerForm, context)) as any;
+    expect(id).toBeDefined();
+    userId = id;
+    token = "Bearer " + (await login(registerForm, context)).access;
 
-    const WorkspaceResult = await createWorkspace({
-      name: "test workspace",
-      description: "this is a test description for this Workspace",
-    }, token, context)
+    const WorkspaceResult = await createWorkspace(
+      {
+        name: "test workspace",
+        description: "this is a test description for this Workspace",
+      },
+      token,
+      context,
+    );
 
     workspaceId = WorkspaceResult.id;
 
-    const response = await createTable({
-      title: "test table",
-      workspaceId: WorkspaceResult.id,
-    }, token, context);
+    const response = await createTable(
+      {
+        title: "test table",
+        workspaceId: WorkspaceResult.id,
+      },
+      token,
+      context,
+    );
 
     tableId = response?.id as Uuid;
 
@@ -55,15 +63,14 @@ describe("getFullWorkspaceByUuid Controller", () => {
         tableId,
       },
       token,
-      context
+      context,
     );
     cardId = cardResult.id as Uuid;
-  })
+  });
 
   it("should get full workspace correctly", async () => {
     const fullWs = await getFullWorkspaceByUuid(workspaceId, token, context);
 
-    expect(fullWs.tables.find((el) => el.id == tableId)).toBeDefined()
+    expect(fullWs.tables.find((el) => el.id == tableId)).toBeDefined();
   });
 });
-

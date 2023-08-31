@@ -16,8 +16,8 @@ async function createWorkspace(
       await createWorkspaceController(
         req.body,
         req.headers.authorization?.slice(7) ?? "",
-        context
-      )
+        context,
+      ),
     );
 }
 
@@ -33,11 +33,10 @@ async function paginateWorkspaceByUserUuid(
         (req.query as any).take,
         (req.query as any).take,
         req.headers.authorization,
-        context
-      )
+        context,
+      ),
     );
 }
-
 
 async function deleteWorkspace(
   req: FastifyRequest,
@@ -47,10 +46,11 @@ async function deleteWorkspace(
   return res
     .code(204)
     .send(
-      await deleteWorkspaceByIdController((req.params as any).id,
+      await deleteWorkspaceByIdController(
+        (req.params as any).id,
         req.headers.authorization,
-        context
-      )
+        context,
+      ),
     );
 }
 
@@ -62,10 +62,11 @@ async function getFullWorkspace(
   return res
     .code(200)
     .send(
-      await getFullWorkspaceByUuid((req.params as any).id,
+      await getFullWorkspaceByUuid(
+        (req.params as any).id,
         req.headers.authorization,
-        context
-      )
+        context,
+      ),
     );
 }
 
@@ -93,5 +94,5 @@ export const WORKSPACE_CONTROLLERS: Controller[] = [
     handler: deleteWorkspace,
     defaultCode: 204,
     method: "delete",
-  }
+  },
 ];

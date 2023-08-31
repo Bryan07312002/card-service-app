@@ -6,7 +6,7 @@ export class NewCardDto {
     public title: string,
     public description: string,
     public tableId: Uuid,
-  ) { }
+  ) {}
 
   static isNewCardDto(value: unknown): value is NewCardDto {
     const newCard = value as NewCardDto;
@@ -16,7 +16,10 @@ export class NewCardDto {
 
     if (newCard.description != undefined)
       if (typeof newCard.description !== "string")
-        throw new DomainError({ errors: { description: "should be a string" } }, 422);
+        throw new DomainError(
+          { errors: { description: "should be a string" } },
+          422,
+        );
 
     if (typeof newCard.tableId !== "string")
       throw new DomainError({ errors: { tableId: "should be a string" } }, 422);

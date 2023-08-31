@@ -1,1 +1,1 @@
-export interface ITimeRepository { }
+export interface ITimeRepository {}

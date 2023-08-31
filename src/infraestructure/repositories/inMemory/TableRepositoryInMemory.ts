@@ -4,6 +4,7 @@ import { ITableRepository } from "@domain/repositories/ITableRepostory";
 
 export class TableRepositoryInMemory
   extends AbstractCrudRepositoryInMemory<Table>
-  implements ITableRepository {
-  tableName: string = 'tables'
+  implements ITableRepository
+{
+  tableName: string = "tables";
 }

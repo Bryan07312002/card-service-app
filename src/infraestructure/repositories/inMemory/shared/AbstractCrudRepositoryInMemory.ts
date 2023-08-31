@@ -11,19 +11,17 @@ import {
 import IBaseModel from "@domain/models/shared/IBaseModel";
 import { DomainError } from "@domain/error";
 
-
-
 export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   implements
-  IInsert<E>,
-  IPaginate<E>,
-  IFilterOne<E>,
-  IDeleteOne<E>,
-  IUpdateOne<E>
+    IInsert<E>,
+    IPaginate<E>,
+    IFilterOne<E>,
+    IDeleteOne<E>,
+    IUpdateOne<E>
 {
-  tableName = '';
+  tableName = "";
 
-  constructor(public data: any) { }
+  constructor(public data: any) {}
 
   private findMatches(filters: Partial<E>[]): any[] {
     const results: E[] = [];
@@ -32,11 +30,14 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
       for (const filter of filters) {
         const keys = Object.keys(filter) as (keyof Partial<E>)[];
         for (const k in keys) {
-          const hasField = item.serializeFields().includes(keys[k])
-          if (hasField && item[keys[k] as keyof E] == filter[keys[k] as keyof E]) {
-            results.push(item)
+          const hasField = item.serializeFields().includes(keys[k]);
+          if (
+            hasField &&
+            item[keys[k] as keyof E] == filter[keys[k] as keyof E]
+          ) {
+            results.push(item);
             break;
-          };
+          }
         }
       }
     }
@@ -49,7 +50,6 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   }
 
   async delete(filter: Filter<E>): Promise<void> {
-
     const result = this.data[this.tableName].findIndex((obj: E) =>
       filter.where.every((criteria) => this.customFilter(obj, criteria)),
     );
@@ -74,7 +74,7 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
     );
 
     if (result) return result;
-    else return null
+    else return null;
   }
 
   filterFieldsFromArray<T extends IBaseModel<T>>(
@@ -95,11 +95,13 @@ export class AbstractCrudRepositoryInMemory<E extends IBaseModel<E>>
   async paginate(filter: Filter<E>, arg: Args): Promise<Paginate<Partial<E>>> {
     const indexStart = (arg.page - 1) * arg.take;
     const indexEnd = indexStart + arg.take;
-    const data = filter.where.length > 0 ? this.findMatches(filter.where) : this.data[this.tableName];
+    const data =
+      filter.where.length > 0
+        ? this.findMatches(filter.where)
+        : this.data[this.tableName];
 
     return {
-      data: data.slice(indexStart, indexEnd)
-        .map((el: E) => el.toJson() as E),
+      data: data.slice(indexStart, indexEnd).map((el: E) => el.toJson() as E),
       page: arg.page,
       count: data.length,
     };

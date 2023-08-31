@@ -36,7 +36,7 @@ export class User extends IBaseModel<User> {
         {
           errors: {
             username: "Username must be between 3 and 20 characters.",
-          }
+          },
         },
         422,
       );
@@ -52,7 +52,10 @@ export class User extends IBaseModel<User> {
     if (emailPattern.test(email)) {
       this._email = email;
     } else {
-      throw new DomainError({ errors: { email: "Invalid email format." } }, 422);
+      throw new DomainError(
+        { errors: { email: "Invalid email format." } },
+        422,
+      );
     }
   }
 
@@ -64,7 +67,7 @@ export class User extends IBaseModel<User> {
         {
           errors: {
             password: "Password must be at least 5 characters.",
-          }
+          },
         },
         422,
       );

@@ -10,21 +10,28 @@ export class CanDeleteCardPolicy {
     private cardRepository: ICardRepository,
     private tableRepository: ITableRepository,
     private workspaceRepository: IWorkspaceRepository,
-  ) { }
+  ) {}
 
   async execute(cardId: Uuid, userId: Uuid) {
-    const card = await this
-      .cardRepository
-      .filter_one({ where: [{ id: cardId }], select: [] });
+    const card = await this.cardRepository.filter_one({
+      where: [{ id: cardId }],
+      select: [],
+    });
 
-    const table = await this
-      .tableRepository
-      .filter_one({ where: [{ id: card?.tableId }], select: [] });
+    const table = await this.tableRepository.filter_one({
+      where: [{ id: card?.tableId }],
+      select: [],
+    });
 
-    const worksapce = await this
-      .workspaceRepository
-      .filter_one({ where: [{ id: table?.workspaceId as Uuid }], select: [] });
+    const worksapce = await this.workspaceRepository.filter_one({
+      where: [{ id: table?.workspaceId as Uuid }],
+      select: [],
+    });
 
-    if (worksapce?.userId !== userId) throw new DomainError({ errors: "card doesn´t belongs to the user" }, 403);
+    if (worksapce?.userId !== userId)
+      throw new DomainError(
+        { errors: "card doesn´t belongs to the user" },
+        403,
+      );
   }
 }

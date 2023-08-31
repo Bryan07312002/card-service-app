@@ -16,7 +16,7 @@ export class LoginUsecase {
     private userRepository: IUserRepository,
     private hashRepository: IHashRepository,
     private jwtRepository: IJwtRepository,
-  ) { }
+  ) {}
 
   async execute(form: LoginFormDto): Promise<TokenPair> {
     const u = await UserService.filter_one(

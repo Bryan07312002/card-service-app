@@ -15,7 +15,7 @@ describe("Create Workspace Controller", () => {
     username: "testerson",
     email: "testerson@gmail.com",
     password: "secret",
-  }
+  };
   let token: string;
   let userId: Uuid;
   beforeAll(async () => {
@@ -25,24 +25,24 @@ describe("Create Workspace Controller", () => {
       DbPool: { users: [], workspaces: [] },
     };
 
-    const { id } = await register(registerForm, context) as any;
-    expect(id).toBeDefined()
-    userId = id
-    token = "Bearer " + (await login(registerForm, context)).access
-  })
+    const { id } = (await register(registerForm, context)) as any;
+    expect(id).toBeDefined();
+    userId = id;
+    token = "Bearer " + (await login(registerForm, context)).access;
+  });
 
   let workspace: NewWorkspace;
   beforeEach(async () => {
     context.DbPool.workspaces = [];
     workspace = {
       name: "test workspace",
-      description: "this is a test description for this Workspace"
-    }
-  })
+      description: "this is a test description for this Workspace",
+    };
+  });
 
   it("should create workspace correctly", async () => {
     const w = { ...workspace };
-    const result = await createWorkspace(w, token, context)
+    const result = await createWorkspace(w, token, context);
 
     expect(result.id).toBeDefined();
     expect(result.userId).toBe(userId);
@@ -53,7 +53,7 @@ describe("Create Workspace Controller", () => {
   it("should create workspace correctly with no description", async () => {
     const w: any = { ...workspace };
     delete w.description;
-    const result = await createWorkspace(w, token, context)
+    const result = await createWorkspace(w, token, context);
 
     expect(result.id).toBeDefined();
     expect(result.userId).toBe(userId);
@@ -65,8 +65,8 @@ describe("Create Workspace Controller", () => {
     const w: any = { ...workspace };
     delete w.name;
     try {
-      await createWorkspace(w, token, context)
-      throw "shouldn't get here"
+      await createWorkspace(w, token, context);
+      throw "shouldn't get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
       if (!(e instanceof DomainError)) return;

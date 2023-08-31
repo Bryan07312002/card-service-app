@@ -14,7 +14,7 @@ describe("deleteWorkspaceById Controller", () => {
     username: "testerson",
     email: "testerson@gmail.com",
     password: "secret",
-  }
+  };
   let token: string;
   let userId: Uuid;
   let workspaceId: Uuid;
@@ -25,23 +25,32 @@ describe("deleteWorkspaceById Controller", () => {
       DbPool: { users: [], workspaces: [], tables: [], cards: [] },
     };
 
-    const { id } = await register(registerForm, context) as any;
-    expect(id).toBeDefined()
-    userId = id
-    token = "Bearer " + (await login(registerForm, context)).access
+    const { id } = (await register(registerForm, context)) as any;
+    expect(id).toBeDefined();
+    userId = id;
+    token = "Bearer " + (await login(registerForm, context)).access;
 
-    const WorkspaceResult = await createWorkspace({
-      name: "test workspace",
-      description: "this is a test description for this Workspace",
-    }, token, context)
+    const WorkspaceResult = await createWorkspace(
+      {
+        name: "test workspace",
+        description: "this is a test description for this Workspace",
+      },
+      token,
+      context,
+    );
 
     workspaceId = WorkspaceResult.id;
-  })
+  });
 
   it("should delete workspace correctly", async () => {
-    const fullWs = await deleteWorkspaceByIdController(workspaceId, token, context);
-    expect(fullWs).not.toBeDefined()
-    expect(context.DbPool.workspaces.find((el: any) => el.id === workspaceId)).not.toBeDefined();
+    const fullWs = await deleteWorkspaceByIdController(
+      workspaceId,
+      token,
+      context,
+    );
+    expect(fullWs).not.toBeDefined();
+    expect(
+      context.DbPool.workspaces.find((el: any) => el.id === workspaceId),
+    ).not.toBeDefined();
   });
 });
-

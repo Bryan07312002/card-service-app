@@ -14,11 +14,11 @@ import { ICardRepository } from "@domain/repositories/ICardRepository";
 type fullTable = Table & { cards: Card[] };
 
 export type FullWorkspace = {
-  id: Uuid,
-  name: string,
-  description: string,
-  tables: fullTable[],
-}
+  id: Uuid;
+  name: string;
+  description: string;
+  tables: fullTable[];
+};
 
 export class GetFullWorkspaceByUuid {
   userId: Uuid | undefined;
@@ -29,7 +29,7 @@ export class GetFullWorkspaceByUuid {
     private cardRepository: ICardRepository,
     private userRepository: IUserRepository,
     private jwtRepository: IJwtRepository,
-  ) { }
+  ) {}
 
   async authenticate(token: string) {
     this.userId = (
@@ -47,7 +47,7 @@ export class GetFullWorkspaceByUuid {
 
     const workspace = await WorkspaceService.filter_one(
       { workspace: this.workspaceRepository },
-      { where: [{ id }], select: [] }
+      { where: [{ id }], select: [] },
     );
 
     if (!workspace)
@@ -56,26 +56,28 @@ export class GetFullWorkspaceByUuid {
     const tables: Table[] = (
       await this.tableRepository.paginate(
         { where: [{ workspaceId: workspace.id }], select: [] },
-        { page: 1, take: 20 })
+        { page: 1, take: 20 },
+      )
     ).data as any;
 
-    const tablesIds = tables.map(el => ({ id: el.id }))
+    const tablesIds = tables.map((el) => ({ id: el.id }));
     const cards: Card[] = (
       await CardService.paginate(
         { card: this.cardRepository },
         { where: tablesIds, select: [] },
-        { page: 1, take: 100 })
+        { page: 1, take: 100 },
+      )
     ).data as any;
 
     const fullTables: fullTable[] = [];
     for (const i in tables) {
       const tableId = tables[i].id;
-      const filtredCards = cards.filter(el => el.tableId === tableId);
+      const filtredCards = cards.filter((el) => el.tableId === tableId);
       fullTables.push({
         id: tables[i].id,
         title: tables[i].title,
-        cards: filtredCards
-      } as any)
+        cards: filtredCards,
+      } as any);
     }
 
     return {
@@ -83,6 +85,6 @@ export class GetFullWorkspaceByUuid {
       name: workspace.name,
       description: workspace.description,
       tables: fullTables,
-    }
+    };
   }
 }

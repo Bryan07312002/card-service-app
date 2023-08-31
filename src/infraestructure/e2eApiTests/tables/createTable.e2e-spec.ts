@@ -43,7 +43,8 @@ describe("table", () => {
         name: faker.word.sample(),
         description: faker.lorem.text(),
       })
-      .expect(201).then(({ body }) => {
+      .expect(201)
+      .then(({ body }) => {
         expect(body.id).toBeDefined();
         workspaceId = body.id;
       });
@@ -51,7 +52,7 @@ describe("table", () => {
     table = {
       title: faker.word.sample(),
       workspaceId: workspaceId,
-    }
+    };
   });
 
   it("should create table correctly", async () => {
@@ -63,9 +64,9 @@ describe("table", () => {
       .send(t)
       .expect(201)
       .then(({ body }) => {
-        expect(body.id).toBeDefined()
-        expect(body.title).toBe(t.title)
-        expect(body.workspaceId).toBe(t.workspaceId)
-      })
-  })
+        expect(body.id).toBeDefined();
+        expect(body.title).toBe(t.title);
+        expect(body.workspaceId).toBe(t.workspaceId);
+      });
+  });
 });

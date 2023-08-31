@@ -43,7 +43,8 @@ describe("Full workspace", () => {
         name: faker.word.sample(),
         description: faker.lorem.text(),
       })
-      .expect(201).then(({ body }) => {
+      .expect(201)
+      .then(({ body }) => {
         expect(body.id).toBeDefined();
         workspaceId = body.id;
       });
@@ -51,6 +52,6 @@ describe("Full workspace", () => {
     table = {
       title: faker.lorem.slug(1),
       workspaceId: workspaceId,
-    }
+    };
   });
 });

@@ -18,7 +18,7 @@ export class DeleteCardUsecase {
     private workspaceRepository: IWorkspaceRepository,
     private jwtRepository: IJwtRepository,
     private userRepository: IUserRepository,
-  ) { }
+  ) {}
 
   async authenticate(token: string): Promise<DeleteCardUsecase> {
     this.userId = (
@@ -36,7 +36,7 @@ export class DeleteCardUsecase {
     await new CanDeleteCardPolicy(
       this.CardRespository,
       this.tableRepository,
-      this.workspaceRepository
+      this.workspaceRepository,
     ).execute(id, this.userId);
 
     return CardService.delete_one(

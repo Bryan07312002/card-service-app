@@ -18,15 +18,9 @@ export async function deleteCardController(
   const card = new CardRepositoryInMemory(context.DbPool);
   const worksapce = new WorkspaceRepositoryInMemory(context.DbPool);
   const table = new TableRepositoryInMemory(context.DbPool);
-  const usecase = new DeleteCardUsecase(
-    card,
-    table,
-    worksapce,
-    jwt,
-    user,
-  );
+  const usecase = new DeleteCardUsecase(card, table, worksapce, jwt, user);
 
-  if (!isUuid(id)) throw ""
+  if (!isUuid(id)) throw "";
   await usecase.authenticate(isJwtToken(token) ? token.slice(7) : "");
-  return usecase.execute(id);;
+  return usecase.execute(id);
 }

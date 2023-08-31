@@ -18,78 +18,88 @@ describe("Register Controller", () => {
       email: "testeasdas@email.com",
       username: "teste",
       password: "secret",
-    }
-  })
+    };
+  });
 
   it("should not register user that has nothing", async () => {
     try {
       await register({}, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
-      if (!(e instanceof DomainError)) { throw "e is not instance of DomainError" }
+      if (!(e instanceof DomainError)) {
+        throw "e is not instance of DomainError";
+      }
 
       expect(e.code).toBe(422);
     }
-  })
+  });
 
   it("should not register user that has no username", async () => {
     let form: any = { ...registerForm };
     delete form.username;
     try {
       await register(form, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
-      if (!(e instanceof DomainError)) { throw "e is not instance of DomainError" }
+      if (!(e instanceof DomainError)) {
+        throw "e is not instance of DomainError";
+      }
 
       expect(e.code).toBe(422);
       expect(e.message.errors.username).toBeDefined();
     }
-  })
+  });
 
   it("should not register user that has no password", async () => {
     let form: any = { ...registerForm };
     delete form.password;
     try {
       await register(form, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
-      if (!(e instanceof DomainError)) { throw "e is not instance of DomainError" }
+      if (!(e instanceof DomainError)) {
+        throw "e is not instance of DomainError";
+      }
 
       expect(e.code).toBe(422);
       expect(e.message.errors.password).toBeDefined();
     }
-  })
+  });
 
   it("should not register user that has no email", async () => {
     let form: any = { ...registerForm };
     delete form.email;
     try {
       await register(form, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
-      if (!(e instanceof DomainError)) { throw "e is not instance of DomainError" }
+      if (!(e instanceof DomainError)) {
+        throw "e is not instance of DomainError";
+      }
 
       expect(e.code).toBe(422);
       expect(e.message.errors.email).toBeDefined();
     }
-  })
+  });
 
   it("should not register user that has no email", async () => {
     let form: any = { ...registerForm };
-    form.email = 'AnInvalidEmail';
+    form.email = "AnInvalidEmail";
     try {
       await register(form, context);
-      throw "should not get here"
+      throw "should not get here";
     } catch (e) {
       expect(e).toBeInstanceOf(DomainError);
-      if (!(e instanceof DomainError)) { throw "e is not instance of DomainError" }
+      if (!(e instanceof DomainError)) {
+        throw "e is not instance of DomainError";
+      }
 
       expect(e.code).toBe(422);
       expect(e.message.errors.email).toBeDefined();
     }
-  })
+  });
 });

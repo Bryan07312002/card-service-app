@@ -36,5 +36,5 @@ describe("LOGIN", () => {
     return request.agent(API).post(path).send(loginForm).expect(422);
   });
 
-  it("should auth with existing user", () => { });
+  it("should auth with existing user", () => {});
 });

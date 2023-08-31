@@ -21,24 +21,24 @@ export async function getFullWorkspaceByUuid(
   const usecase = new GetFullWorkspaceByUuid(workspace, table, card, user, jwt);
 
   if (!isUuid(id)) throw "not uuid";
-  await usecase.authenticate(isJwtToken(token) ? token.slice(7) : '')
+  await usecase.authenticate(isJwtToken(token) ? token.slice(7) : "");
   const fullWs = await usecase.execute(id);
 
   return {
     name: fullWs.name,
     description: fullWs.description,
-    tables: fullWs.tables.map(el => {
+    tables: fullWs.tables.map((el) => {
       const jsonTable: any = el;
-      const jsonCards = el.cards.map(c => {
+      const jsonCards = el.cards.map((c) => {
         const card: any = c.toJson();
         delete card.tableId;
-      })
+      });
 
       return {
         id: jsonTable.id,
         title: jsonTable.title,
         cards: jsonCards,
-      }
-    })
-  }
+      };
+    }),
+  };
 }

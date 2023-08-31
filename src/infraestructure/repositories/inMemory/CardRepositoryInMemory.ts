@@ -4,6 +4,7 @@ import { Card } from "@domain/models/card";
 
 export class CardRepositoryInMemory
   extends AbstractCrudRepositoryInMemory<Card>
-  implements ICardRepository {
-  tableName: string = 'cards'
+  implements ICardRepository
+{
+  tableName: string = "cards";
 }

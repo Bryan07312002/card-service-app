@@ -29,7 +29,9 @@ describe("User class tests", () => {
     }
     expect(err).toEqual(
       new DomainError(
-        { errors: { username: "Username must be between 3 and 20 characters." } },
+        {
+          errors: { username: "Username must be between 3 and 20 characters." },
+        },
         422,
       ),
     );

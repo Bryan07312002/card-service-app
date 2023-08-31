@@ -16,7 +16,11 @@ export class CardService {
     cardDto: NewCard,
   ): Promise<Card> {
     // check if table exists
-    const TablExists = await dependencies.table.filter_one({ where: [{ id: cardDto.tableId }], select: [] });
+    const TablExists = await dependencies.table.filter_one({
+      where: [{ id: cardDto.tableId }],
+      select: [],
+    });
+
     if (!TablExists)
       throw new DomainError({ errors: { tableId: "doesn't exists" } }, 422);
 

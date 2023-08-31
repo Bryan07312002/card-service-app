@@ -45,7 +45,7 @@ describe("WorkspaceService tests", () => {
           "Description 1",
         ),
     ),
-    delete: jest.fn(async () => { }),
+    delete: jest.fn(async () => {}),
     Update: jest.fn(
       async () =>
         new Workspace(

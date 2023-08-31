@@ -19,18 +19,11 @@ export async function createCardController(
   const table = new TableRepositoryInMemory(context.DbPool);
   const user = new UserRepositoryInMemory(context.DbPool);
   const card = new CardRepositoryInMemory(context.DbPool);
-  const usecase = new CreateCardUsecase(
-    card,
-    uuid,
-    jwt,
-    user,
-    table
-  );
+  const usecase = new CreateCardUsecase(card, uuid, jwt, user, table);
 
-  if (!NewCardDto.isNewCardDto(body)) throw ""
+  if (!NewCardDto.isNewCardDto(body)) throw "";
   await usecase.authenticate(isJwtToken(token) ? token.slice(7) : "");
 
   const c = await usecase.execute(body);
   return c.toJson() as Card;
 }
-

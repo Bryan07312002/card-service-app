@@ -10,11 +10,7 @@ async function createTable(
   return res
     .code(201)
     .send(
-      await createTableController(
-        req.body,
-        req.headers.authorization,
-        context
-      )
+      await createTableController(req.body, req.headers.authorization, context),
     );
 }
 

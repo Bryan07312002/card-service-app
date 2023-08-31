@@ -17,7 +17,7 @@ describe("deleteCardController Controller", () => {
     username: "testerson",
     email: "testerson@gmail.com",
     password: "secret",
-  }
+  };
   let token: string;
   let userId: Uuid;
   let tableId: Uuid;
@@ -28,23 +28,31 @@ describe("deleteCardController Controller", () => {
       DbPool: { users: [], workspaces: [], tables: [], cards: [] },
     };
 
-    const { id } = await register(registerForm, context) as any;
-    expect(id).toBeDefined()
-    userId = id
-    token = "Bearer " + (await login(registerForm, context)).access
+    const { id } = (await register(registerForm, context)) as any;
+    expect(id).toBeDefined();
+    userId = id;
+    token = "Bearer " + (await login(registerForm, context)).access;
 
-    const result = await createWorkspace({
-      name: "test workspace",
-      description: "this is a test description for this Workspace",
-    }, token, context)
+    const result = await createWorkspace(
+      {
+        name: "test workspace",
+        description: "this is a test description for this Workspace",
+      },
+      token,
+      context,
+    );
 
-    const response = await createTable({
-      title: "test table",
-      workspaceId: result.id,
-    }, token, context);
+    const response = await createTable(
+      {
+        title: "test table",
+        workspaceId: result.id,
+      },
+      token,
+      context,
+    );
 
     tableId = response?.id as Uuid;
-  })
+  });
 
   let cardId: Uuid;
   beforeEach(async () => {
@@ -53,15 +61,14 @@ describe("deleteCardController Controller", () => {
       title: "test Card",
       description: "test description",
       tableId,
-    }
+    };
 
     const { id } = await createCardController(card, token, context);
     cardId = id as Uuid;
-  })
+  });
 
   test("response shouldn´t be defined", async () => {
     const response = await deleteCardController(cardId, token, context);
     expect(response).not.toBeDefined();
   });
 });
-

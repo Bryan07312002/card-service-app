@@ -16,7 +16,7 @@ export class CreateWorkspaceUsecase {
     private jwtRepository: IJwtRepository,
     private uuidRepository: IUuidRepository,
     private userRepository: IUserRepository,
-  ) { }
+  ) {}
 
   async authenticate(token: string) {
     this.userId = (

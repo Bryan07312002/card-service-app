@@ -36,7 +36,10 @@ export class Workspace extends IBaseModel<Workspace> {
 
   set name(name: string) {
     if (name.length < 4) {
-      throw new DomainError({ name: "Name must be at least 4 characters." }, 422);
+      throw new DomainError(
+        { name: "Name must be at least 4 characters." },
+        422,
+      );
     }
     this._name = name;
   }
