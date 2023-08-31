@@ -29,7 +29,7 @@ export class GetFullWorkspaceByUuid {
     private cardRepository: ICardRepository,
     private userRepository: IUserRepository,
     private jwtRepository: IJwtRepository,
-  ) {}
+  ) { }
 
   async authenticate(token: string) {
     this.userId = (
