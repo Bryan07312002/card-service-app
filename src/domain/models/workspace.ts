@@ -5,7 +5,7 @@ import { DomainError } from "@domain/error";
 export class Workspace extends IBaseModel<Workspace> {
   private _id: Uuid;
   private _name!: string;
-  private _userId!: string;
+  private _userId!: Uuid;
   private _description!: string;
 
   constructor(id: Uuid, name: string, userId: string, description: string) {
@@ -45,11 +45,11 @@ export class Workspace extends IBaseModel<Workspace> {
   }
 
   // Getter and setter for 'userId'
-  get userId(): string {
+  get userId(): Uuid {
     return this._userId;
   }
 
-  set userId(userId: string) {
+  set userId(userId: Uuid) {
     this._userId = userId;
   }
 

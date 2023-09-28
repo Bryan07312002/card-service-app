@@ -16,12 +16,12 @@ export class CardService {
     cardDto: NewCard,
   ): Promise<Card> {
     // check if table exists
-    const TablExists = await dependencies.table.filter_one({
+    const TableExists = await dependencies.table.filter_one({
       where: [{ id: cardDto.tableId }],
       select: [],
     });
 
-    if (!TablExists)
+    if (!TableExists)
       throw new DomainError({ errors: { tableId: "doesn't exists" } }, 422);
 
     const workspace = new Card(
@@ -65,6 +65,11 @@ export class CardService {
     filter: Filter<Card>,
     newData: Partial<Card>,
   ): Promise<void> {
-    return dependencies.card.Update(filter, newData);
+    return dependencies
+      .card
+      .update(
+        filter,
+        newData
+      );
   }
 }

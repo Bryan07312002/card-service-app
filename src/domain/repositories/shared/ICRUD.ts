@@ -31,5 +31,5 @@ export interface IDeleteOne<E> {
 }
 
 export interface IUpdateOne<E> {
-  Update(filter: Filter<E>, newData: Partial<E>): Promise<void>;
+  update(filter: Filter<E>, newData: Partial<E>): Promise<void>;
 }

@@ -5,8 +5,8 @@ import { IWorkspaceRepository } from "@domain/repositories/IWorkspaceRepository"
 import { Uuid } from "@domain/types";
 import { CardUtils } from "./shared/cardUtils";
 
-/// Check if user is allowed to remove card and throws domain erros if doesn´t
-export class CanDeleteCardPolicy extends CardUtils {
+/// Check if user is allowed to update card and throws domain erros if doesn´t
+export class CanUpdateCardPolicy extends CardUtils {
   constructor(
     cardRepo: ICardRepository,
     tableRepo: ITableRepository,
@@ -19,7 +19,7 @@ export class CanDeleteCardPolicy extends CardUtils {
     if (cardUserId !== incomingUserId)
       throw new DomainError(
         { errors: "card doesn´t belongs to the user" },
-        403,
+        422,
       );
   }
 }

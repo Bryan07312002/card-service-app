@@ -1,37 +1,14 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import { RegisterUserUsecase } from "@application/usecases/authentication/register"; // Import your RegisterUserUseCase and RegisterForm
+import { RegisterUserUsecase } from "@application/usecases/authentication/register";
 import { RegisterFormDto } from "@application/dtos/registerForm";
 import { IUserRepository } from "@domain/repositories/IUsersRepostiry";
 import { IHashRepository } from "@domain/repositories/IHashRespository";
 import { IUuidRepository } from "@domain/repositories/IUuidRepository";
 import { User } from "@domain/models/user";
 import { UserService } from "@domain/services/usersService";
-import { Filter, Args, Paginate } from "@domain/repositories/shared/ICRUD";
-
-// Mock implementations of dependencies
-class MockUserRepository implements IUserRepository {
-  insert(entity: User): Promise<User> {
-    throw new Error("Method not implemented.");
-  }
-  filter_one(filter: Filter<User>): Promise<User> {
-    throw new Error("Method not implemented.");
-  }
-  paginate(filter: Filter<User>, arg: Args): Promise<Paginate<Partial<User>>> {
-    throw new Error("Method not implemented.");
-  }
-}
-
-class MockHashRepository implements IHashRepository {
-  hash(incomingString: string): string {
-    return incomingString;
-  }
-}
-
-class MockUuidRepository implements IUuidRepository {
-  createV4(): `${string}-${string}-${string}-${string}-${string}` {
-    return "a-a-a-a-a";
-  }
-}
+import { MockUuidRepository } from "@application/__tests__/shared/mocks/uuidMockRepository";
+import { MockHashRepository } from "@application/__tests__/shared/mocks/hashMockRepository";
+import { MockUserRepository } from "@application/__tests__/shared/mocks/userMockRepositiory";
 
 describe("RegisterUserUseCase tests", () => {
   let registerUserUseCase: RegisterUserUsecase;
@@ -42,7 +19,7 @@ describe("RegisterUserUseCase tests", () => {
   beforeEach(() => {
     // Create mock instances for dependencies
     mockUserRepository = new MockUserRepository();
-    mockHashRepository = new MockHashRepository();
+    mockHashRepository = new MockHashRepository('');
     mockUuidRepository = new MockUuidRepository();
 
     // Create the use case instance

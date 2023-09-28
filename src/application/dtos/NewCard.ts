@@ -6,7 +6,7 @@ export class NewCardDto {
     public title: string,
     public description: string,
     public tableId: Uuid,
-  ) {}
+  ) { }
 
   static isNewCardDto(value: unknown): value is NewCardDto {
     const newCard = value as NewCardDto;

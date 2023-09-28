@@ -159,8 +159,10 @@ const config: Config = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
+  testRegex: '\\.spec\\.(js|ts)$',
   // testMatch: [
   //   "**/__tests__/**/*.[jt]s?(x)",
+  //   
   //   "**/?(*.)+(spec|test).[tj]s?(x)"
   // ],
 

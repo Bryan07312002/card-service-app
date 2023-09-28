@@ -10,37 +10,10 @@ import { IJwtRepository } from "@domain/repositories/IJwtRepository";
 import { JwtService } from "@domain/services/jwtService";
 import { User } from "@domain/models/user";
 import { UserService } from "@domain/services/usersService";
-import { Filter, Args, Paginate } from "@domain/repositories/shared/ICRUD";
 import { DomainError } from "@domain/error";
-
-class MockUserRepository implements IUserRepository {
-  insert(entity: User): Promise<User> {
-    throw new Error("Method not implemented.");
-  }
-  filter_one(filter: Filter<User>): Promise<User> {
-    throw new Error("Method not implemented.");
-  }
-  paginate(filter: Filter<User>, arg: Args): Promise<Paginate<Partial<User>>> {
-    throw new Error("Method not implemented.");
-  }
-}
-
-class MockHashRepository implements IHashRepository {
-  salt: string;
-  async hash(_incomingString: string): Promise<string> {
-    throw new Error("Method not implemented.");
-  }
-}
-
-class MockJwtRepository implements IJwtRepository {
-  secret: string;
-  sign(payload: object): string {
-    throw new Error("Method not implemented.");
-  }
-  verify(token: string): object {
-    throw new Error("Method not implemented.");
-  }
-}
+import { MockUserRepository } from "@application/__tests__/shared/mocks/userMockRepositiory";
+import { MockHashRepository } from "@application/__tests__/shared/mocks/hashMockRepository";
+import { MockJwtRepository } from "@application/__tests__/shared/mocks/jwtMockRepository";
 
 describe("LoginUsecase tests", () => {
   let loginUsecase: LoginUsecase;
@@ -50,8 +23,8 @@ describe("LoginUsecase tests", () => {
 
   beforeEach(() => {
     mockUserRepository = new MockUserRepository();
-    mockHashRepository = new MockHashRepository();
-    mockJwtRepository = new MockJwtRepository();
+    mockHashRepository = new MockHashRepository('');
+    mockJwtRepository = new MockJwtRepository('');
 
     loginUsecase = new LoginUsecase(
       mockUserRepository,
